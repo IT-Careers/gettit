@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gettit.Web.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class GettitDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public GettitDbContext(DbContextOptions<GettitDbContext> options)
             : base(options)
         {
         }
