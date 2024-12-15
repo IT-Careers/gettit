@@ -13,33 +13,33 @@ namespace Gettit.Data.Repositories
             this._dbContext = dbContext;
         }
 
-        public async Task<TEntity> CreateAsync(TEntity entity)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
             await this._dbContext.AddAsync(entity);
             await this._dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity entity)
+        public virtual async Task<TEntity> DeleteAsync(TEntity entity)
         {
             this._dbContext.Remove(entity);
             await this._dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<TEntity> EditAsync(TEntity entity)
+        public virtual async Task<TEntity> EditAsync(TEntity entity)
         {
             this._dbContext.Update(entity);
             await this._dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public IQueryable<TEntity> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             return this._dbContext.Set<TEntity>().AsQueryable<TEntity>();
         }
 
-        public IQueryable<TEntity> GetAllAsNoTracking()
+        public virtual IQueryable<TEntity> GetAllAsNoTracking()
         {
             return this._dbContext.Set<TEntity>().AsNoTracking();
         }

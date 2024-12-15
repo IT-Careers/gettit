@@ -99,6 +99,12 @@ There should also be a Moderator role, which has the authority of CRUD over any 
 
 There should be an Administrator authority which has access to the Administration and full sovereignty over the forum.
 
+## Custom user roles
+
+* Label
+* CSS Color / Gradient
+* Authority (identity role)
+
 ## Additional
 
 Reddit cateogories are actually users (something like page users in Facebook or GitHub organization users)
