@@ -22,11 +22,11 @@ namespace Gettit.Data.Repositories
             return await base.CreateAsync(entity);
         }
 
-        public override async Task<TEntity> EditAsync(TEntity entity)
+        public override async Task<TEntity> UpdateAsync(TEntity entity)
         {
             entity.UpdatedOn = DateTime.UtcNow;
             entity.UpdatedBy = await this.GetUser();
-            return await base.EditAsync(entity);
+            return await base.UpdateAsync(entity);
         }
 
         public override async Task<TEntity> DeleteAsync(TEntity entity)
