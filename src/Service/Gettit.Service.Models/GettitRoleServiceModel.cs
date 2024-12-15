@@ -1,6 +1,6 @@
-﻿namespace Gettit.Data.Models
+﻿namespace Gettit.Service.Models
 {
-    public class GettitRole : BaseEntity
+    public class GettitRoleServiceModel : BaseServiceModel
     {
         public const string GettitRoleDefaultAuthority = "User";
 

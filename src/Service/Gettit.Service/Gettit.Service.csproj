@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Gettit.Data.Models\Gettit.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\Gettit.Data\Gettit.Data.csproj" />
+    <ProjectReference Include="..\Gettit.Service.Models\Gettit.Service.Models.csproj" />
+  </ItemGroup>
+
 </Project>
