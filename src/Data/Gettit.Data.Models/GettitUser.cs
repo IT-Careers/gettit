@@ -4,6 +4,6 @@ namespace Gettit.Data.Models
 {
     public class GettitUser : IdentityUser
     {
-        public GettitRole ForumRole { get; set; }
+        public GettitRole? ForumRole { get; set; }
     }
 }

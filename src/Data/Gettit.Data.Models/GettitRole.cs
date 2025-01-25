@@ -1,6 +1,6 @@
 ﻿namespace Gettit.Data.Models
 {
-    public class GettitRole : BaseEntity
+    public class GettitRole : MetadataBaseEntity
     {
         public const string GettitRoleDefaultAuthority = "User";
 
