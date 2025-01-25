@@ -1,4 +1,6 @@
+using Gettit.Data.Models;
 using Gettit.Web.Data;
+using Gettit.Web.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,14 +14,15 @@ public class Program
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        builder.Services
+            .AddDefaultIdentity<GettitUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<GettitDbContext>();
         builder.Services.AddControllersWithViews();
     }
 
     public static void ConfigureApp(WebApplication app)
     {
-
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -31,6 +34,8 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        app.UseDatabaseSeed();
 
         app.UseHttpsRedirection();
         app.UseRouting();

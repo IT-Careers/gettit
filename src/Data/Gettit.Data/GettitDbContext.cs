@@ -30,6 +30,26 @@ namespace Gettit.Web.Data
                 .WithMany(t => t.Reactions)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<GettitUser>()
+                .HasOne(u => u.ForumRole)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GettitRole>()
+                .HasOne(u => u.CreatedBy)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GettitRole>()
+                .HasOne(u => u.UpdatedBy)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<GettitRole>()
+                .HasOne(u => u.DeletedBy)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+
             base.OnModelCreating(builder);
         }
     }

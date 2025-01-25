@@ -4,6 +4,7 @@ using Gettit.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gettit.Web.Data.Migrations
 {
     [DbContext(typeof(GettitDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250125094238_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,6 +252,7 @@ namespace Gettit.Web.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ForumRoleId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -685,7 +689,8 @@ namespace Gettit.Web.Data.Migrations
                     b.HasOne("Gettit.Data.Models.GettitRole", "ForumRole")
                         .WithMany()
                         .HasForeignKey("ForumRoleId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ForumRole");
                 });
