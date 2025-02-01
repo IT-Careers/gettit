@@ -1,0 +1,16 @@
+﻿
+@if(Context.Request.Path.ToString() == "/Thread/Create") {
+    <div class="creation-selector d-flex justify-content-start">
+        <a href="/Thread/Create" id="creation-selector-thread-selection" class="creation-element creation-element-focused">Thread</a>
+        <a href="/Community/Create" id="creation-selector-community-selection" class="creation-element">Community</a>
+    </div>
+
+    <partial name="_ThreadCreatePartial" />
+} else if (Context.Request.Path.ToString() == "/Community/Create") {
+    <div class="creation-selector d-flex justify-content-start">
+        <a href="/Thread/Create" id="creation-selector-thread-selection" class="creation-element">Thread</a>
+        <a href="/Community/Create" id="creation-selector-community-selection" class="creation-element creation-element-focused">Community</a>
+    </div>
+
+    <partial name="_CommunityCreatePartial" />
+}

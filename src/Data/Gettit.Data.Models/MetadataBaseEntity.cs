@@ -6,12 +6,12 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public GettitUser UpdatedBy { get; set; }
+        public GettitUser? UpdatedBy { get; set; }
 
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
 
-        public GettitUser DeletedBy { get; set; }
+        public GettitUser? DeletedBy { get; set; }
 
-        public DateTime DeletedOn { get; set; }
+        public DateTime? DeletedOn { get; set; }
     }
 }
