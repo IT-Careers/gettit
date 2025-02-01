@@ -18,6 +18,16 @@ namespace Gettit.Web.Controllers
             return View();
         }
 
+        public IActionResult APiAction()
+        {
+            return Json(new List<object>([
+               new { Name = "Pesho", Age = 15 },
+               new { Name = "Pesho", Age = 15 },
+               new { Name = "Pesho", Age = 15 },
+               new { Name = "Pesho", Age = 15 },
+            ]));
+        }
+
         public IActionResult Privacy()
         {
             return View();

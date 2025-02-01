@@ -11,13 +11,25 @@
 </head>
 <body>
     <div class="container-fluid ps-4">
-        <header class="mt-3 d-flex justify-content-between">
-            <div id="logo">
-                <a href="/">logologologo</a>
+        <header id="topbar" class="mt-3">
+            <div id="topbar-logo-container">
+                <div id="logo">
+                    <a href="/">logologologo</a>
+                </div>
             </div>
-            <div id="search">
-                <div class="form-group w-100 d-flex justify-content-center">
-                    <input class="form-control" placeholder="Search threads...">
+            <div id="topbar-actions-container" class="d-flex justify-content-between">
+                <div id="search">
+                    <div class="form-group w-100 d-flex justify-content-center">
+                        <input class="form-control" placeholder="Search threads...">
+                    </div>
+                </div>
+                <div id="actions" class="d-flex justify-content-end">
+                    <a href="/Thread/Create" id="post-thread-button">
+                        <img src="~/images/post.svg" width="25px" height="25px">
+                    </a>
+
+                    <div id="layout-profile">
+                    </div>
                 </div>
             </div>
         </header>

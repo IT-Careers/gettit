@@ -6,27 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gettit.Service
 {
-    public class CategoryService : ICategoryService
+    public class GettitCommunityService : IGettitCommunityService
     {
-        private readonly CategoryRepository categoryRepository;
+        private readonly GettitCommunityRepository categoryRepository;
 
-        public CategoryService(CategoryRepository categoryRepository)
+        public GettitCommunityService(GettitCommunityRepository categoryRepository)
         {
             this.categoryRepository = categoryRepository;
         }
 
-        public async Task<CategoryServiceModel> CreateAsync(CategoryServiceModel model)
+        public async Task<GettitCommunityServiceModel> CreateAsync(GettitCommunityServiceModel model)
         {
-            Category category = model.ToEntity();
+            GettitCommunity category = model.ToEntity();
 
             await this.categoryRepository.CreateAsync(category);
 
             return category.ToModel();
         }
 
-        public async Task<CategoryServiceModel> DeleteAsync(string id)
+        public async Task<GettitCommunityServiceModel> DeleteAsync(string id)
         {
-            Category category = await this.categoryRepository.GetAll().SingleOrDefaultAsync(c => c.Id == id);
+            GettitCommunity category = await this.categoryRepository.GetAll().SingleOrDefaultAsync(c => c.Id == id);
 
             if (category == null)
             {
@@ -38,7 +38,7 @@ namespace Gettit.Service
             return category.ToModel();
         }
 
-        public IQueryable<CategoryServiceModel> GetAll()
+        public IQueryable<GettitCommunityServiceModel> GetAll()
         {
             return this.categoryRepository.GetAll()
                 .Include(c => c.CreatedBy)
@@ -47,7 +47,7 @@ namespace Gettit.Service
                 .Select(c => c.ToModel());
         }
 
-        public async Task<CategoryServiceModel> GetByIdAsync(string id)
+        public async Task<GettitCommunityServiceModel> GetByIdAsync(string id)
         {
             return (await this.categoryRepository.GetAll()
                 .Include(c => c.CreatedBy)
@@ -56,9 +56,9 @@ namespace Gettit.Service
                 .SingleOrDefaultAsync(c => c.Id == id))?.ToModel();
         }
 
-        public async Task<CategoryServiceModel> UpdateAsync(string id, CategoryServiceModel model)
+        public async Task<GettitCommunityServiceModel> UpdateAsync(string id, GettitCommunityServiceModel model)
         {
-            Category category = await this.categoryRepository.GetAll().SingleOrDefaultAsync(c => c.Id == id);
+            GettitCommunity category = await this.categoryRepository.GetAll().SingleOrDefaultAsync(c => c.Id == id);
 
             if (category == null)
             {
@@ -67,7 +67,8 @@ namespace Gettit.Service
 
             category.Name = model.Name;
             category.Description = model.Description;
-            category.CoverPhoto = model.CoverPhoto != null ? model.CoverPhoto.ToEntity() : category.CoverPhoto;
+            category.ThumbnailPhoto = model.ThumbnailPhoto != null ? model.ThumbnailPhoto.ToEntity() : category.ThumbnailPhoto;
+            category.BannerPhoto = model.BannerPhoto != null ? model.BannerPhoto.ToEntity() : category.BannerPhoto;
 
             await this.categoryRepository.UpdateAsync(category);
 

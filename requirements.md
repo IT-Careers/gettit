@@ -114,5 +114,6 @@ Our Categories need some level of moderation.
 * Public pool: Here a person can propose up to 1 category creation request.
 * Private pool: (Verified Users - there is monetization here (payments with Stripe)). Paid users can propose up to 3 category creation requests, 
   and they don't need votes. A moderator should see the category creation request and if it's okay, create it without votes.
+* Community privacy
 
 

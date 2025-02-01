@@ -6,7 +6,9 @@
 
         public string Content { get; set; }
 
-        public Category Category { get; set; }
+        public GettitCommunity Community { get; set; }
+
+        public List<GettitTag> Tags { get; set; }
 
         public List<UserThreadReaction> Reactions { get; set; }
 
