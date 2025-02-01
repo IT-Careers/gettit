@@ -8,13 +8,13 @@ namespace Gettit.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/Shared/ThreadCommunityCreate.cshtml");
         }
 
         [HttpPost]
         public IActionResult CreateConfirm(CreateThreadModel createThreadModel)
         {
-            return View();
+            return View("~/Views/Shared/ThreadCommunityCreate.cshtml");
         }
     }
 }

@@ -9,8 +9,8 @@
         // Threads in this community can only hold the community tags
         public List<GettitTag> Tags { get; set; }
 
-        public Attachment ThumbnailPhoto { get; set; }
+        public Attachment? ThumbnailPhoto { get; set; }
         
-        public Attachment BannerPhoto { get; set; }
+        public Attachment? BannerPhoto { get; set; }
     }
 }

@@ -313,9 +313,28 @@ body {
 
 /* END REGISTER FORM STYLING */
 
-/* CREATE THREAD STYLING */
+/* CREATE THREAD / COMMUNITY STYLING */
+
+.creation-selector {
+    padding: 0px 25px;
+}
+
+.creation-element {
+    font-size: 32px;
+    margin-left: 15px;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+.creation-element-focused {
+    border-bottom: 5px solid #888888;
+}
 
 #create-thread-form {
+    padding: 25px;
+}
+
+#create-community-form {
     padding: 25px;
 }
 
@@ -425,4 +444,4 @@ body {
     border-radius: 25px;
 }
 
-/* END CREATE THREAD STYLING */
+/* END CREATE THREAD / COMMUNITY STYLING */

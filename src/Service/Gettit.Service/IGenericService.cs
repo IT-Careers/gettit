@@ -8,6 +8,8 @@
 
         Task<TModel> CreateAsync(TModel model);
 
+        Task<TEntity> InternalCreateAsync(TEntity model);
+
         Task<TModel> UpdateAsync(string id, TModel model);
 
         Task<TModel> DeleteAsync(string id);

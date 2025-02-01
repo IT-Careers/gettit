@@ -1,8 +1,7 @@
 ﻿@using Gettit.Web.Models.Thread
 @model CreateThreadModel
 
-<form asp-controller="Thread" asp-action="Create" method="post" id="create-thread-form" class="w-50">
-    <h1>Create Thread</h1>
+<form asp-controller="Thread" asp-action="CreateConfirm" method="post" id="create-thread-form" class="w-50">
     <hr class="hr-2 mb-5 hr-white" />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
     <div class="mb-3">
@@ -70,17 +69,22 @@
 <script>
     const currentTags = [];
 
+    document.querySelector('#create-thread-form button').addEventListener('click', (e) => {
+        document.querySelector('#create-thread-form').submit();
+    });
+
     document.querySelector('.form-tags-input').addEventListener('click', (e) => {
         document.querySelector('.form-tags-input-field').focus();
     });
 
     document.querySelector('.form-tags-input-field').addEventListener('keyup', (e) => {
         if ((e.key === 'Enter' || e.keyCode === 13)) {
-            if(!currentTags.includes(e.target.value)) {
-                currentTags.push('#' + e.target.value);
+            const hashValue = '#' + e.target.value;
+            if(!currentTags.includes(hashValue)) {
+                currentTags.push(hashValue);
                 let tagSpan = document.createElement('span');
                 tagSpan.classList.add('created-tag');
-                tagSpan.innerText = '#' + e.target.value;
+                tagSpan.innerText = hashValue;
                 document.querySelector('.form-tags-input-field').before(tagSpan);
                 document.querySelector('#model-tags').value = currentTags.join(',');
             }

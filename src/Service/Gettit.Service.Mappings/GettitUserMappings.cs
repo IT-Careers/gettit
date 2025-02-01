@@ -14,7 +14,7 @@ namespace Gettit.Service.Mappings
         {
             return new GettitUserServiceModel
             {
-                ForumRole = entity.ForumRole.ToModel(),
+                ForumRole = entity.ForumRole?.ToModel(),
                 Email = entity.Email,
                 Id = entity.Id,
                 UserName = entity.UserName
