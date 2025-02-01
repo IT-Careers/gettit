@@ -3,25 +3,28 @@ using Gettit.Service.Models;
 
 namespace Gettit.Service.Mappings
 {
-    public static class CategoryMappings
+    public static class GettitCommunityMappings
     {
-        public static Category ToEntity(this CategoryServiceModel model)
+        public static GettitCommunity ToEntity(this GettitCommunityServiceModel model)
         {
-            return new Category
+            return new GettitCommunity
             {
                 Name = model.Name,
                 Description = model.Description,
-                CoverPhoto = model.CoverPhoto?.ToEntity()
+                ThumbnailPhoto = model.ThumbnailPhoto?.ToEntity(),
+                BannerPhoto = model.BannerPhoto?.ToEntity()
             };
         }
 
-        public static CategoryServiceModel ToModel(this Category entity)
+        public static GettitCommunityServiceModel ToModel(this GettitCommunity entity)
         {
-            return new CategoryServiceModel
+            return new GettitCommunityServiceModel
             {
+                Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
-                CoverPhoto = entity.CoverPhoto.ToModel(),
+                ThumbnailPhoto = entity.ThumbnailPhoto.ToModel(),
+                BannerPhoto = entity.BannerPhoto.ToModel(),
                 CreatedOn = entity.CreatedOn,
                 UpdatedOn = entity.UpdatedOn,
                 DeletedOn = entity.DeletedOn,

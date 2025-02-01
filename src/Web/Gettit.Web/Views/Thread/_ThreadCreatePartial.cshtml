@@ -1,0 +1,131 @@
+﻿@using Gettit.Web.Models.Thread
+@model CreateThreadModel
+
+<form asp-controller="Thread" asp-action="Create" method="post" id="create-thread-form" class="w-50">
+    <h1>Create Thread</h1>
+    <hr class="hr-2 mb-5 hr-white" />
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="mb-3">
+        <label asp-for="@Model.Title" class="form-label fw-bold">Title</label>
+        <input asp-for="@Model.Title" class="form-control" aria-required="true" placeholder="Thread title..." />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="@Model.Content" class="form-label fw-bold">Content</label>
+        <textarea asp-for="@Model.Content" class="form-control" aria-required="true" placeholder="Thread content..." rows="5"></textarea>
+        <span asp-validation-for="@Model.Content" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <input id="model-tags" type="hidden" asp-for="@Model.Tags" hidden disabled />
+        <label class="form-label fw-bold">Tags</label>
+        <div class="form-tags-input">
+            <div class="created-tags">
+                <input class="form-tags-input-field" maxlength="20" />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="@Model.CommunityId" class="d-block form-label fw-bold">Community</label>
+        <input asp-for="@Model.CommunityId" hidden disabled />
+        <div class="selected-community">
+            <div class="selected-community-picture">
+                <img src="~/images/monkas.jpg" width="35px" height="35px">
+            </div>
+            <div class="selected-community-name">g/memes</div>
+        </div>
+        <div class="community-selector">
+            <img class="community-selector-search-icon" src="~/images/search.svg" width="35px" height="35px" />
+            <input class="community-selector-input" placeholder="Search communities..."/>
+        </div>
+        <div class="community-selector-autocomplete">
+            <div class="selector-community">
+                <div class="selected-community-picture">
+                    <img src="~/images/monkas.jpg" width="35px" height="35px">
+                </div>
+                <div class="selected-community-name">g/memes</div>
+            </div>
+            <div class="selector-community">
+                <div class="selected-community-picture">
+                    <img src="~/images/monkas.jpg" width="35px" height="35px">
+                </div>
+                <div class="selected-community-name">g/memes</div>
+            </div>
+            <div class="selector-community">
+                <div class="selected-community-picture">
+                    <img src="~/images/monkas.jpg" width="35px" height="35px">
+                </div>
+                <div class="selected-community-name">g/memes</div>
+            </div>
+            <div class="selector-community">
+                <div class="selected-community-picture">
+                    <img src="~/images/monkas.jpg" width="35px" height="35px">
+                </div>
+                <div class="selected-community-name">g/memes</div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-secondary" type="button">Post</button>
+</form>
+
+<script>
+    const currentTags = [];
+
+    document.querySelector('.form-tags-input').addEventListener('click', (e) => {
+        document.querySelector('.form-tags-input-field').focus();
+    });
+
+    document.querySelector('.form-tags-input-field').addEventListener('keyup', (e) => {
+        if ((e.key === 'Enter' || e.keyCode === 13)) {
+            if(!currentTags.includes(e.target.value)) {
+                currentTags.push('#' + e.target.value);
+                let tagSpan = document.createElement('span');
+                tagSpan.classList.add('created-tag');
+                tagSpan.innerText = '#' + e.target.value;
+                document.querySelector('.form-tags-input-field').before(tagSpan);
+                document.querySelector('#model-tags').value = currentTags.join(',');
+            }
+            e.target.value = '';
+        }
+    });
+
+    document.querySelector('.form-tags-input-field').addEventListener('keydown', (e) => {
+        if ((e.keyCode === 8 || e.keyCode === 46)) {
+            if(e.target.value === '') {
+                currentTags.pop();
+                let tags = document.querySelectorAll('.created-tag');
+                tags[tags.length - 1].remove();
+                document.querySelector('#model-tags').value = currentTags.join(',');
+            }
+        }
+    });
+
+    document.querySelector('.selected-community').addEventListener('click', (e) => {
+        document.querySelector('.selected-community').style.display = 'none';
+        document.querySelector('.community-selector').style.display = 'block';
+        document.querySelector('.community-selector-autocomplete').style.display = 'flex';
+        document.querySelector('.community-selector-autocomplete').style.width = document.querySelector('.form-tags-input').offsetWidth + 'px';
+        document.querySelector('.community-selector-input').focus();
+    });
+
+    document.querySelector('.community-selector-input').addEventListener('focusout', (e) => {
+        document.querySelector('.community-selector').style.display = 'none';
+        document.querySelector('.community-selector-autocomplete').style.display = 'none';
+        document.querySelector('.selected-community').style.display = 'inline-flex';
+    });
+
+    document.querySelector('.community-selector-input').addEventListener('keyup', (e) => {
+        let inputValue = e.target.value;
+        
+        let selectorCommunities = [...document.querySelectorAll('.selector-community .selected-community-name')];
+
+        selectorCommunities.forEach(community => {
+            if(!community.innerText.replace('g/', '').toLowerCase().includes(inputValue.toLowerCase())) {
+                community.parentElement.style.display = 'none';
+            }
+
+            if(community.innerText.replace('g/', '').toLowerCase().includes(inputValue.toLowerCase())) {
+                community.parentElement.style.display = 'inline-flex';
+            }
+        });
+    });
+</script>

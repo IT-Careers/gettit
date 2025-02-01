@@ -4,6 +4,7 @@ using Gettit.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gettit.Web.Data.Migrations
 {
     [DbContext(typeof(GettitDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250126094914_GenericMetadataConfiguration")]
+    partial class GenericMetadataConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,6 +209,12 @@ namespace Gettit.Web.Data.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("GettitCommunityId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GettitThreadId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Label")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -222,6 +231,10 @@ namespace Gettit.Web.Data.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("DeletedById");
+
+                    b.HasIndex("GettitCommunityId");
+
+                    b.HasIndex("GettitThreadId");
 
                     b.HasIndex("UpdatedById");
 
@@ -473,36 +486,6 @@ namespace Gettit.Web.Data.Migrations
                     b.ToTable("UserThreadReaction");
                 });
 
-            modelBuilder.Entity("GettitCommunityGettitTag", b =>
-                {
-                    b.Property<string>("GettitCommunityId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("GettitCommunityId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("GettitCommunityGettitTag");
-                });
-
-            modelBuilder.Entity("GettitTagGettitThread", b =>
-                {
-                    b.Property<string>("GettitThreadId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("GettitThreadId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("GettitTagGettitThread");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -750,6 +733,14 @@ namespace Gettit.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Gettit.Data.Models.GettitCommunity", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("GettitCommunityId");
+
+                    b.HasOne("Gettit.Data.Models.GettitThread", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("GettitThreadId");
+
                     b.HasOne("Gettit.Data.Models.GettitUser", "UpdatedBy")
                         .WithMany()
                         .HasForeignKey("UpdatedById")
@@ -910,36 +901,6 @@ namespace Gettit.Web.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GettitCommunityGettitTag", b =>
-                {
-                    b.HasOne("Gettit.Data.Models.GettitCommunity", null)
-                        .WithMany()
-                        .HasForeignKey("GettitCommunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gettit.Data.Models.GettitTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GettitTagGettitThread", b =>
-                {
-                    b.HasOne("Gettit.Data.Models.GettitThread", null)
-                        .WithMany()
-                        .HasForeignKey("GettitThreadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gettit.Data.Models.GettitTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1000,11 +961,18 @@ namespace Gettit.Web.Data.Migrations
                     b.Navigation("Replies");
                 });
 
+            modelBuilder.Entity("Gettit.Data.Models.GettitCommunity", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
             modelBuilder.Entity("Gettit.Data.Models.GettitThread", b =>
                 {
                     b.Navigation("Comment");
 
                     b.Navigation("Reactions");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

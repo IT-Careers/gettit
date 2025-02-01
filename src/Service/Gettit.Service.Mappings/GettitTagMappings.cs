@@ -1,28 +1,25 @@
 ﻿using Gettit.Data.Models;
 using Gettit.Service.Models;
+using System.Reflection.Emit;
 
 namespace Gettit.Service.Mappings
 {
-    public static class GettitRoleMappings
+    public static class GettitTagMappings
     {
-        public static GettitRole ToEntity(this GettitRoleServiceModel model)
+        public static GettitTag ToEntity(this GettitTagServiceModel model)
         {
-            return new GettitRole
+            return new GettitTag
             {
-                Label = model.Label,
-                Color = model.Color,
-                Authority = model.Authority
+                Label = model.Label
             };
         }
 
-        public static GettitRoleServiceModel ToModel(this GettitRole entity)
+        public static GettitTagServiceModel ToModel(this GettitTag entity)
         {
-            return new GettitRoleServiceModel
+            return new GettitTagServiceModel
             {
                 Id = entity.Id,
                 Label = entity.Label,
-                Color = entity.Color,
-                Authority = entity.Authority,
                 CreatedOn = entity.CreatedOn,
                 UpdatedOn = entity.UpdatedOn,
                 DeletedOn = entity.DeletedOn,

@@ -19,10 +19,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\Gettit.Data\Gettit.Data.csproj" />
+    <ProjectReference Include="..\Gettit.Web.Models\Gettit.Web.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="Views\Community\" />
   </ItemGroup>
 
 </Project>

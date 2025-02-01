@@ -1,4 +1,5 @@
-﻿using Gettit.Data.Models;
+﻿using Gettit.Data.Extensions;
+using Gettit.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +9,11 @@ namespace Gettit.Web.Data
     {
         public DbSet<Attachment> Attachments { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<GettitCommunity> Communities { get; set; }
 
         public DbSet<GettitThread> Threads { get; set; }
+
+        public DbSet<GettitThread> Tags { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
 
@@ -35,20 +38,26 @@ namespace Gettit.Web.Data
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<GettitRole>()
-                .HasOne(u => u.CreatedBy)
+            builder.ConfigureMetadataEntity<GettitRole>();
+            builder.ConfigureMetadataEntity<GettitTag>();
+
+            builder.Entity<GettitCommunity>()
+                .HasOne(gc => gc.ThumbnailPhoto)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<GettitRole>()
-                .HasOne(u => u.UpdatedBy)
+            builder.Entity<GettitCommunity>()
+                .HasOne(gc => gc.BannerPhoto)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<GettitRole>()
-                .HasOne(u => u.DeletedBy)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<GettitCommunity>()
+                .HasMany(gc => gc.Tags)
+                .WithMany();
+
+            builder.Entity<GettitThread>()
+                .HasMany(gc => gc.Tags)
+                .WithMany();
 
             base.OnModelCreating(builder);
         }
