@@ -11,7 +11,7 @@ namespace Gettit.Service.Mappings
             {
                 Name = model.Name,
                 Description = model.Description,
-                Tags = model.Tags.Select(tag => tag.ToEntity()).ToList(),
+                Tags = model.Tags?.Select(tag => tag.ToEntity()).ToList(),
                 ThumbnailPhoto = model.ThumbnailPhoto?.ToEntity(),
                 BannerPhoto = model.BannerPhoto?.ToEntity()
             };
@@ -24,7 +24,7 @@ namespace Gettit.Service.Mappings
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
-                Tags = entity.Tags.Select(tag => tag.ToModel()).ToList(),
+                Tags = entity.Tags?.Select(tag => tag.ToModel()).ToList(),
                 ThumbnailPhoto = entity.ThumbnailPhoto?.ToModel(),
                 BannerPhoto = entity.BannerPhoto?.ToModel(),
                 CreatedOn = entity.CreatedOn,

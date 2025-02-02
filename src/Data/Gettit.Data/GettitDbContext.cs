@@ -56,8 +56,23 @@ namespace Gettit.Web.Data
                 .WithMany();
 
             builder.Entity<GettitThread>()
-                .HasMany(gc => gc.Tags)
+                .HasMany(gt => gt.Tags)
                 .WithMany();
+
+            builder.Entity<Comment>()
+                .HasMany(c => c.Attachments)
+                .WithMany();
+
+            builder.Entity<GettitCommunity>()
+                .HasOne(gc => gc.ThumbnailPhoto);
+
+            builder.Entity<GettitCommunity>()
+                .HasOne(gc => gc.BannerPhoto);
+
+            builder.Entity<GettitThread>()
+                .HasMany(gt => gt.Attachments)
+                .WithMany();
+
 
             base.OnModelCreating(builder);
         }

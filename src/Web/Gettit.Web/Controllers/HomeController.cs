@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Gettit.Service.Thread;
 using Gettit.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,26 +7,17 @@ namespace Gettit.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IGettitThreadService _gettitThreadService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IGettitThreadService gettitThreadService)
         {
-            _logger = logger;
+            _gettitThreadService = gettitThreadService;
         }
 
         public IActionResult Index()
         {
+            this.ViewData["Threads"] = this._gettitThreadService.GetAll().ToList();
             return View();
-        }
-
-        public IActionResult APiAction()
-        {
-            return Json(new List<object>([
-               new { Name = "Pesho", Age = 15 },
-               new { Name = "Pesho", Age = 15 },
-               new { Name = "Pesho", Age = 15 },
-               new { Name = "Pesho", Age = 15 },
-            ]));
         }
 
         public IActionResult Privacy()

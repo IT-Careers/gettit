@@ -1,7 +1,9 @@
 using Gettit.Data.Models;
 using Gettit.Data.Repositories;
+using Gettit.Service;
 using Gettit.Service.Community;
 using Gettit.Service.Tag;
+using Gettit.Service.Thread;
 using Gettit.Web.Data;
 using Gettit.Web.Seed;
 using Microsoft.AspNetCore.Identity;
@@ -20,10 +22,13 @@ public class Program
         // Application Repositories
         builder.Services.AddTransient<GettitCommunityRepository>();
         builder.Services.AddTransient<GettitTagRepository>();
+        builder.Services.AddTransient<GettitThreadRepository>();
 
         // Application Services
         builder.Services.AddTransient<IGettitCommunityService, GettitCommunityService>();
         builder.Services.AddTransient<IGettitTagService, GettitTagService>();
+        builder.Services.AddTransient<IGettitThreadService, GettitThreadService>();
+        builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
 
         builder.Services
             .AddDefaultIdentity<GettitUser>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -6,6 +6,8 @@
 
         public string Content { get; set; }
 
+        public List<Attachment> Attachments { get; set; }
+
         public GettitCommunity Community { get; set; }
 
         public List<GettitTag> Tags { get; set; }
