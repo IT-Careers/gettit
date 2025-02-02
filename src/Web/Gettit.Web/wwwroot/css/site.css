@@ -387,7 +387,7 @@ body {
 }
 
 .selected-community {
-    display: inline-flex;
+    display: none;
     justify-content: start;
     padding: 10px 25px 10px 15px;
     background-color: #595959;
@@ -408,7 +408,7 @@ body {
 }
 
 .community-selector {
-    display: none;
+    display: block;
     border: 2px solid #AFAFAF;
     border-radius: 25px;
     padding: 10px 25px 10px 15px;
@@ -428,6 +428,7 @@ body {
 }
 
 .community-selector-autocomplete {
+    z-index: 1000;
     flex-direction: column;
     overflow-y: auto;
     max-height: 20vh;
@@ -438,6 +439,8 @@ body {
 }
 
 .selector-community {
+    background: transparent;
+    z-index: 1001;
     display: inline-flex;
     justify-content: start;
     padding: 10px 25px 10px 15px;

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Data\Gettit.Data.Models\Gettit.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\Gettit.Data\Gettit.Data.csproj" />
     <ProjectReference Include="..\Gettit.Service.Mappings\Gettit.Service.Mappings.csproj" />

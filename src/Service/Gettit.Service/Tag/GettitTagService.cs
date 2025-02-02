@@ -43,5 +43,10 @@ namespace Gettit.Service.Tag
         {
             throw new NotImplementedException();
         }
+
+        public Task<GettitTag> InternalGetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

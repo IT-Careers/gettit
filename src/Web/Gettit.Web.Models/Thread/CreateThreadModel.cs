@@ -1,4 +1,7 @@
-﻿namespace Gettit.Web.Models.Thread
+﻿using Gettit.Web.Models.Utilities.Binding;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Gettit.Web.Models.Thread
 {
     public class CreateThreadModel
     {
@@ -8,6 +11,7 @@
 
         public string Content { get; set; }
 
+        [BindProperty(BinderType = typeof(TagsModelBinder))]
         public List<string> Tags { get; set; }
     }
 }

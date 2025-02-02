@@ -1,6 +1,10 @@
 ﻿@using Gettit.Web.Models.Thread
 @model CreateThreadModel
 
+@{
+    var communities = (List<GettitCommunityServiceModel>)this.ViewData["Communities"];
+}
+
 <form asp-controller="Thread" asp-action="CreateConfirm" method="post" id="create-thread-form" class="w-50">
     <hr class="hr-2 mb-5 hr-white" />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -15,7 +19,7 @@
         <span asp-validation-for="@Model.Content" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <input id="model-tags" type="hidden" asp-for="@Model.Tags" hidden disabled />
+        <input id="model-tags" type="hidden" asp-for="@Model.Tags" hidden />
         <label class="form-label fw-bold">Tags</label>
         <div class="form-tags-input">
             <div class="created-tags">
@@ -25,42 +29,27 @@
     </div>
     <div class="mb-3">
         <label asp-for="@Model.CommunityId" class="d-block form-label fw-bold">Community</label>
-        <input asp-for="@Model.CommunityId" hidden disabled />
+        <input id="model-community" asp-for="@Model.CommunityId" hidden />
         <div class="selected-community">
             <div class="selected-community-picture">
-                <img src="~/images/monkas.jpg" width="35px" height="35px">
+                <img src="" width="35px" height="35px">
             </div>
-            <div class="selected-community-name">g/memes</div>
+            <div class="selected-community-name"></div>
         </div>
         <div class="community-selector">
             <img class="community-selector-search-icon" src="~/images/search.svg" width="35px" height="35px" />
             <input class="community-selector-input" placeholder="Search communities..."/>
         </div>
         <div class="community-selector-autocomplete">
-            <div class="selector-community">
-                <div class="selected-community-picture">
-                    <img src="~/images/monkas.jpg" width="35px" height="35px">
+            @foreach(var community in communities) {
+                <div class="selector-community">
+                    <span id="@community.Id" hidden></span>
+                    <div class="selected-community-picture">
+                        <img src="@community.ThumbnailPhoto?.CloudUrl" width="35px" height="35px">
+                    </div>
+                    <div class="selected-community-name">g/@community.Name</div>
                 </div>
-                <div class="selected-community-name">g/memes</div>
-            </div>
-            <div class="selector-community">
-                <div class="selected-community-picture">
-                    <img src="~/images/monkas.jpg" width="35px" height="35px">
-                </div>
-                <div class="selected-community-name">g/memes</div>
-            </div>
-            <div class="selector-community">
-                <div class="selected-community-picture">
-                    <img src="~/images/monkas.jpg" width="35px" height="35px">
-                </div>
-                <div class="selected-community-name">g/memes</div>
-            </div>
-            <div class="selector-community">
-                <div class="selected-community-picture">
-                    <img src="~/images/monkas.jpg" width="35px" height="35px">
-                </div>
-                <div class="selected-community-name">g/memes</div>
-            </div>
+            }
         </div>
     </div>
     <button class="btn btn-secondary" type="button">Post</button>
@@ -110,6 +99,26 @@
         document.querySelector('.community-selector-autocomplete').style.width = document.querySelector('.form-tags-input').offsetWidth + 'px';
         document.querySelector('.community-selector-input').focus();
     });
+
+    document.querySelector('.community-selector-input').addEventListener('focusin', (e) => {
+        document.querySelector('.community-selector-autocomplete').style.display = 'flex';
+        document.querySelector('.community-selector-autocomplete').style.width = document.querySelector('.form-tags-input').offsetWidth + 'px';
+    });
+
+    [...document.querySelectorAll('.selector-community')].forEach(sc => sc.addEventListener('mousedown', (e) => {
+        let selectorCommunity = e.target;
+
+        if(![...selectorCommunity.classList].includes('selector-community')) {
+            selectorCommunity = selectorCommunity.parentElement;
+        }
+
+        document.querySelector('.community-selector').style.display = 'none';
+        document.querySelector('.community-selector-autocomplete').style.display = 'none';
+        document.querySelector('.selected-community').style.display = 'inline-flex';
+        document.querySelector('.selected-community-picture img').src = selectorCommunity.querySelector('.selected-community-picture img').src;
+        document.querySelector('.selected-community-name').innerText = selectorCommunity.querySelector('.selected-community-name').innerText;
+        document.querySelector('#model-community').value = selectorCommunity.querySelector('span').id;
+    }));
 
     document.querySelector('.community-selector-input').addEventListener('focusout', (e) => {
         document.querySelector('.community-selector').style.display = 'none';

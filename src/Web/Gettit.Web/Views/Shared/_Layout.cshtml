@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<GettitUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,14 +26,17 @@
                         <input class="form-control" placeholder="Search threads...">
                     </div>
                 </div>
-                <div id="actions" class="d-flex justify-content-end">
-                    <a href="/Thread/Create" id="post-thread-button">
-                        <img src="~/images/post.svg" width="25px" height="25px">
-                    </a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div id="actions" class="d-flex justify-content-end">
+                        <a href="/Thread/Create" id="post-thread-button">
+                            <img src="~/images/post.svg" width="25px" height="25px">
+                        </a>
 
-                    <div id="layout-profile">
+                        <div id="layout-profile">
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </header>
         <main class="d-flex justify-content-start">
@@ -246,6 +252,7 @@
                 @RenderBody()
             </main>
             <section id="to-be-defined">
+                <!-- LEADERBAORD ?!?!? -->
             </section>
         </main>
     </div>
