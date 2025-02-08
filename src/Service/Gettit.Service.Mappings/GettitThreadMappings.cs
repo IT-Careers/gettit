@@ -25,6 +25,8 @@ namespace Gettit.Service.Mappings
                 Content = entity.Content,
                 Community = entity.Community?.ToModel(),
                 Tags = entity.Tags?.Select(tag => tag.ToModel()).ToList(),
+                Reactions = entity.Reactions?.Select(reaction => reaction.ToModel()).ToList(),
+                Comments = entity.Comments?.Select(comment => comment.ToModel(UserThreadCommentMappingsContext.Thread)).ToList(),
                 CreatedOn = entity.CreatedOn,
                 UpdatedOn = entity.UpdatedOn,
                 DeletedOn = entity.DeletedOn,

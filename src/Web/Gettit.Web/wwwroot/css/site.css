@@ -2,6 +2,12 @@ body {
     background-color: #191919;
 }
 
+.plain-link {
+    outline: none;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -448,3 +454,99 @@ body {
 }
 
 /* END CREATE THREAD / COMMUNITY STYLING */
+
+
+/* DETAILS THREAD STYLING */
+
+.comment-input-field {
+    padding: 25px;
+    background: transparent;
+}
+
+.comment-input-field textarea {
+    background: transparent;
+    color: #FFFFFF;
+    font-weight: bold;
+    resize: none;
+}
+
+.comment-input-field textarea:focus {
+    background: transparent;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.comment-input-field textarea::placeholder {
+    color: #888;
+    font-weight: bold;
+}
+
+.comment-button-holder {
+    position: relative;
+    bottom: 65px;
+}
+
+.details-thread-comments {
+    padding: 25px;
+}
+
+    .details-thread-comment:not(:first-child) {
+        margin-top: 50px;
+    }
+
+.comment-heading {
+}
+
+.comment-heading-user-thumbnail {
+}
+
+.comment-heading-user-thumbnail img {
+    border-radius: 50px;
+}
+
+.comment-heading-username {
+}
+
+.comment-heading-timestamp {
+}
+
+.comment-content {
+}
+
+.comment-content-preview {
+}
+
+.comment-footer {
+}
+
+.comment-footer-reactions {
+    padding: 5px 15px 10px 10px;
+    border-radius: 25px;
+    border: 2px solid #FFFFFF;
+}
+
+    .comment-footer-reactions div {
+        margin-top: 1px;
+    }
+
+.comment-footer-replies {
+    padding: 5px 15px 10px 10px;
+    border-radius: 25px;
+    border: 2px solid #FFFFFF;
+}
+
+    .comment-footer-replies div {
+        margin-top: 1px;
+    }
+
+.comment-footer-follow {
+    padding: 5px 10px 10px 10px;
+    border-radius: 25px;
+    border: 2px solid #FFFFFF;
+}
+
+.comment-footer-share {
+    padding: 5px 10px 10px 10px;
+    border-radius: 25px;
+    border: 2px solid #FFFFFF;
+    /* END DETAILS THREAD STYLING */

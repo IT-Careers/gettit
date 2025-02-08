@@ -9,5 +9,9 @@
         public GettitCommunityServiceModel Community { get; set; }
 
         public List<GettitTagServiceModel> Tags { get; set; }
+
+        public List<UserThreadReactionServiceModel> Reactions { get; set; }
+
+        public List<UserThreadCommentServiceModel> Comments { get; set; }
     }
 }

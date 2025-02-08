@@ -1,0 +1,219 @@
+﻿@model GettitThreadServiceModel
+
+<div class="page-thread d-flex flex-column">
+    <span id="@Model.Id" class="thread-id" hidden></span>
+    <header class="page-thread-heading d-flex justify-content-start">
+        <div class="page-thread-heading-picture">
+            <img src="~/images/monkas.jpg" width="45px" height="45px">
+        </div>
+        <div class="page-thread-heading-category h5 ms-3 mt-1">g/@Model.Community.Name</div>
+        <div class="page-thread-heading-timestamp ms-3 mt-1">@Model.CreatedOn.ToString("dd/MM/yyyy HH:mm")</div>
+    </header>
+    <main class="page-thread-content mt-4">
+        <h4 class="page-thread-content-name">@Model.Title</h4>
+        <p class="page-thread-content-preview mt-3">
+            @Model.Content
+        </p>
+    </main>
+    <footer class="page-thread-footer d-flex justify-content-start">
+        <div class="page-thread-footer-reactions d-flex justify-content-start">
+            <img class="mt-1" src="~/images/reaction.svg" width="20px" height="20px">
+            <div class="ms-2">@Model.Reactions.Count</div>
+        </div>
+        <div class="page-thread-footer-comments d-flex justify-content-start ms-4">
+            <img class="mt-1" src="~/images/comment.svg" width="20px" height="20px">
+            <div class="ms-2">@Model.Comments.Count</div>
+        </div>
+        <div class="page-thread-footer-follow ms-4">
+            <img src="~/images/notification-enable.svg" width="20px" height="20px">
+            <img src="~/images/notification-disable.svg" width="20px" height="20px">
+        </div>
+        <div class="page-thread-footer-share ms-4">
+            <img src="~/images/share.svg" width="20px" height="20px">
+        </div>
+    </footer>
+</div>
+
+<div class="comment-input-field">
+    <textarea class="form-control" rows="1" placeholder="Post a comment..."></textarea>
+    <div class="comment-button-holder d-none justify-content-end p-3">
+        <button class="btn btn-secondary fw-bold me-3 comment-cancel-button">Cancel</button>
+        <button class="btn btn-primary fw-bold comment-submit-button">Comment</button>
+    </div>
+</div>
+
+<div class="details-thread-comments">
+    @foreach(var comment in Model.Comments.OrderByDescending(c => c.Comment.CreatedOn))
+    {
+        <div class="details-thread-comment">
+            <span id="@comment.Comment.Id" class="comment-id" hidden></span>
+            <header class="comment-heading d-flex justify-content-start">
+                <div class="comment-heading-user-thumbnail">
+                    <img src="~/images/monkas.jpg" width="45px" height="45px">
+                </div>
+                <div class="comment-heading-username h5 ms-3 mt-1">@comment.User.UserName</div>
+                <div class="comment-heading-timestamp ms-3 mt-1">@comment.Comment.CreatedOn.ToString("dd/MM/yyyy HH:mm")</div>
+            </header>
+            <main class="comment-content mt-4">
+                <p class="comment-content-preview mt-3">
+                    @comment.Comment.Content
+                </p>
+            </main>
+            <footer class="comment-footer d-flex justify-content-start">
+                <div class="comment-footer-reactions d-flex justify-content-start">
+                    <img class="mt-1" src="~/images/reaction.svg" width="20px" height="20px">
+                    <div class="ms-2">@comment.Comment.Reactions.Count</div>
+                </div>
+                <div class="comment-footer-replies d-flex justify-content-start ms-4">
+                    <img class="mt-1" src="~/images/comment.svg" width="20px" height="20px">
+                    <div class="ms-2">@comment.Comment.Replies.Count</div>
+                </div>
+                <div class="comment-footer-share ms-4">
+                    <img src="~/images/share.svg" width="20px" height="20px">
+                </div>
+            </footer>
+        </div>
+    }
+</div>
+
+<script>
+    const textArea = document.querySelector('.comment-input-field textarea');
+    const threadId = document.querySelector('.thread-id').id;
+
+    const showCommentActions = () => {
+        textArea.rows = 4;
+        document.querySelector('.comment-button-holder').classList.remove('d-none');
+        document.querySelector('.comment-button-holder').classList.add('d-flex');
+    }
+
+    const hideCommentActions = () => {
+        textArea.rows = 1;
+        document.querySelector('.comment-button-holder').classList.remove('d-flex');
+        document.querySelector('.comment-button-holder').classList.add('d-none');
+    }
+
+    document.querySelector('.comment-input-field textarea').addEventListener('focusin', (e) => {
+        showCommentActions();
+    });
+
+
+    document.querySelector('.comment-input-field .comment-submit-button').addEventListener('click', (e) => {
+        const commentContent = textArea.value;
+        textArea.value = '';
+        hideCommentActions();
+        fetch('/Thread/Comment?threadId=' + threadId, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ content: commentContent })
+        })
+            .then((res) => res.json())
+            .then((json) => {
+                const detailsThreadComment = document.createElement('div');
+                detailsThreadComment.classList.add('details-thread-comment');
+
+                const commentSpanId = document.createElement('span');
+                commentSpanId.hidden = true;
+                commentSpanId.id = json.id;
+                commentSpanId.classList.add('comment-id');
+
+                const commentHeader = document.createElement('header');
+                commentHeader.classList.add('comment-heading', 'd-flex', 'justify-content-start');
+
+                const commentHeadingUserThumbnail = document.createElement('div');
+                commentHeadingUserThumbnail.classList.add('comment-heading-user-thumbnail');
+
+                const commentHeadingImage = document.createElement('img');
+                commentHeadingImage.src = '/images/monkas.jpg';
+                commentHeadingImage.width = 45;
+                commentHeadingImage.height = 45;
+
+                commentHeadingUserThumbnail.appendChild(commentHeadingImage);
+
+                const commentHeadingUsername = document.createElement('div');
+                commentHeadingUsername.classList.add('comment-heading-username', 'h5', 'ms-3', 'mt-1');
+                commentHeadingUsername.textContent = json.createdBy.userName;
+
+                const commentHeadingTimestamp = document.createElement('div');
+                commentHeadingTimestamp.classList.add('comment-heading-timestamp', 'ms-3', 'mt-1');
+                commentHeadingTimestamp.textContent = json.createdOn;
+
+                commentHeader.appendChild(commentHeadingUserThumbnail);
+                commentHeader.appendChild(commentHeadingUsername);
+                commentHeader.appendChild(commentHeadingTimestamp);
+
+                const commentMain = document.createElement('main');
+                commentMain.classList.add('comment-content', 'mt-4');
+
+                const commentContent = document.createElement('p');
+                commentContent.classList.add('comment-content-preview', 'mt-3');
+                commentContent.textContent = json.content;
+
+                commentMain.appendChild(commentContent);
+
+                const commentFooter = document.createElement('footer');
+                commentFooter.classList.add('comment-footer', 'd-flex', 'justify-content-start');
+
+                const commentFooterReactions = document.createElement('div');
+                commentFooterReactions.classList.add('comment-footer-reactions', 'd-flex', 'justify-content-start');
+
+                const commentFooterReactionsImage = document.createElement('img');
+                commentFooterReactionsImage.classList.add('mt-1');
+                commentFooterReactionsImage.src = '/images/reaction.svg';
+                commentFooterReactionsImage.width = 20;
+                commentFooterReactionsImage.height = 20;
+
+                const commentFooterReactionsCount = document.createElement('div');
+                commentFooterReactionsCount.classList.add('ms-2');
+                commentFooterReactionsCount.textContent = 0;
+
+                commentFooterReactions.appendChild(commentFooterReactionsImage);
+                commentFooterReactions.appendChild(commentFooterReactionsCount);
+
+                const commentFooterReplies = document.createElement('div');
+                commentFooterReplies.classList.add('comment-footer-replies', 'd-flex', 'justify-content-start', 'ms-4');
+
+                const commentFooterRepliesImage = document.createElement('img');
+                commentFooterRepliesImage.classList.add('mt-1');
+                commentFooterRepliesImage.src = '/images/comment.svg';
+                commentFooterRepliesImage.width = 20;
+                commentFooterRepliesImage.height = 20;
+
+                const commentFooterRepliesCount = document.createElement('div');
+                commentFooterRepliesCount.classList.add('ms-2');
+                commentFooterRepliesCount.textContent = 0;
+
+                commentFooterReplies.appendChild(commentFooterRepliesImage);
+                commentFooterReplies.appendChild(commentFooterRepliesCount);
+
+                const commentFooterShare = document.createElement('div');
+                commentFooterShare.classList.add('comment-footer-share', 'ms-4');
+
+                const commentFooterShareImage = document.createElement('img');
+                commentFooterShareImage.src = '/images/share.svg';
+                commentFooterShareImage.width = 20;
+                commentFooterShareImage.height = 20;
+
+                commentFooterShare.appendChild(commentFooterShareImage);
+
+                commentFooter.appendChild(commentFooterReactions);
+                commentFooter.appendChild(commentFooterReplies);
+                commentFooter.appendChild(commentFooterShare);
+
+                detailsThreadComment.appendChild(commentSpanId);
+                detailsThreadComment.appendChild(commentHeader);
+                detailsThreadComment.appendChild(commentMain);
+                detailsThreadComment.appendChild(commentFooter);
+
+                document.querySelector('.details-thread-comments .details-thread-comment:first-child').before(detailsThreadComment);
+            })
+            .catch((error) => console.error(error));
+
+    });
+
+    document.querySelector('.comment-input-field .comment-cancel-button').addEventListener('click', (e) => {
+        textArea.value = '';
+        hideCommentActions();
+    });
+</script>

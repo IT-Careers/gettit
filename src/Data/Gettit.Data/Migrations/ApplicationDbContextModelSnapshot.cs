@@ -34,7 +34,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("AttachmentComment");
+                    b.ToTable("AttachmentComment", (string)null);
                 });
 
             modelBuilder.Entity("AttachmentGettitThread", b =>
@@ -49,7 +49,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("GettitThreadId");
 
-                    b.ToTable("AttachmentGettitThread");
+                    b.ToTable("AttachmentGettitThread", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.Attachment", b =>
@@ -63,7 +63,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("Attachments", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.Comment", b =>
@@ -106,7 +106,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.GettitCommunity", b =>
@@ -158,7 +158,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("Communities");
+                    b.ToTable("Communities", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.GettitRole", b =>
@@ -205,7 +205,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("ForumRoles");
+                    b.ToTable("ForumRoles", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.GettitTag", b =>
@@ -244,7 +244,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("GettitTag");
+                    b.ToTable("GettitTag", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.GettitThread", b =>
@@ -292,7 +292,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("GettitThread");
+                    b.ToTable("GettitThread", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.GettitUser", b =>
@@ -406,7 +406,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UpdatedById");
 
-                    b.ToTable("Reactions");
+                    b.ToTable("Reactions", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.UserCommentReaction", b =>
@@ -433,7 +433,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserCommentReaction");
+                    b.ToTable("UserCommentReaction", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.UserThreadComment", b =>
@@ -461,7 +461,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserThreadComment");
+                    b.ToTable("UserThreadComment", (string)null);
                 });
 
             modelBuilder.Entity("Gettit.Data.Models.UserThreadReaction", b =>
@@ -489,7 +489,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserThreadReaction");
+                    b.ToTable("UserThreadReaction", (string)null);
                 });
 
             modelBuilder.Entity("GettitCommunityGettitTag", b =>
@@ -504,7 +504,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("GettitCommunityGettitTag");
+                    b.ToTable("GettitCommunityGettitTag", (string)null);
                 });
 
             modelBuilder.Entity("GettitTagGettitThread", b =>
@@ -519,7 +519,7 @@ namespace Gettit.Web.Data.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("GettitTagGettitThread");
+                    b.ToTable("GettitTagGettitThread", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

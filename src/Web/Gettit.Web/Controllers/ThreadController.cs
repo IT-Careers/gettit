@@ -1,6 +1,7 @@
 ﻿using Gettit.Service.Community;
 using Gettit.Service.Models;
 using Gettit.Service.Thread;
+using Gettit.Web.Models.Comment;
 using Gettit.Web.Models.Community;
 using Gettit.Web.Models.Thread;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +44,32 @@ namespace Gettit.Web.Controllers
 
             // TODO: Redirect to Thread Page
             return Redirect("/");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string threadId)
+        {
+            GettitThreadServiceModel thread = await this._gettitThreadService.GetByIdAsync(threadId);
+
+            if(thread == null)
+            {
+                return NotFound("Thread not found...");
+            }
+
+            return View(thread);
+        }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        public async Task<IActionResult> Comment([FromQuery] string threadId, [FromBody] CreateCommentModel model)
+        {
+            var result = await this._gettitThreadService.CreateCommentOnThread(threadId, new CommentServiceModel
+            {
+                Content = model.Content,
+                //Attachments
+            });
+
+            return Ok(result);
         }
     }
 }
