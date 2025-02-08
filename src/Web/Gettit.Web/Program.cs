@@ -1,9 +1,11 @@
 using Gettit.Data.Models;
 using Gettit.Data.Repositories;
-using Gettit.Service;
+using Gettit.Service.Cloud;
+using Gettit.Service.Comment;
 using Gettit.Service.Community;
 using Gettit.Service.Tag;
 using Gettit.Service.Thread;
+using Gettit.Service.User;
 using Gettit.Web.Data;
 using Gettit.Web.Seed;
 using Microsoft.AspNetCore.Identity;
@@ -23,11 +25,14 @@ public class Program
         builder.Services.AddTransient<GettitCommunityRepository>();
         builder.Services.AddTransient<GettitTagRepository>();
         builder.Services.AddTransient<GettitThreadRepository>();
+        builder.Services.AddTransient<CommentRepository>();
 
         // Application Services
         builder.Services.AddTransient<IGettitCommunityService, GettitCommunityService>();
         builder.Services.AddTransient<IGettitTagService, GettitTagService>();
         builder.Services.AddTransient<IGettitThreadService, GettitThreadService>();
+        builder.Services.AddTransient<ICommentService, CommentService>();
+        builder.Services.AddTransient<IUserContextService, UserContextService>();
         builder.Services.AddTransient<ICloudinaryService, CloudinaryService>();
 
         builder.Services

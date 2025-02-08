@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
-namespace Gettit.Service
+namespace Gettit.Service.Cloud
 {
     public class CloudinaryService : ICloudinaryService
     {
@@ -19,7 +19,7 @@ namespace Gettit.Service
         public CloudinaryService(IConfiguration configuration, ILogger<CloudinaryService> logger)
         {
             this.configuration = configuration;
-            this._logger = logger;
+            _logger = logger;
         }
 
         private string GetUnixTimestamp()
@@ -29,12 +29,12 @@ namespace Gettit.Service
 
         private string GetApiKey()
         {
-            return this.configuration["Cloudinary:ApiKey"];
+            return configuration["Cloudinary:ApiKey"];
         }
 
         private string GetApiSecret()
         {
-            return this.configuration["Cloudinary:ApiSecret"];
+            return configuration["Cloudinary:ApiSecret"];
         }
 
         private string EncodeWithSha256(string value)
@@ -53,7 +53,7 @@ namespace Gettit.Service
 
         private string GetSignature(string timestamp, string publicId)
         {
-            return this.EncodeWithSha256($"public_id={publicId}&timestamp={timestamp}{this.GetApiSecret()}");
+            return EncodeWithSha256($"public_id={publicId}&timestamp={timestamp}{GetApiSecret()}");
         }
 
         private byte[] ReadFileBytes(IFormFile formFile)
@@ -72,22 +72,22 @@ namespace Gettit.Service
 
         public async Task<Dictionary<string, object>> UploadFile(IFormFile formFile)
         {
-            var currentTimestamp = this.GetUnixTimestamp();
-            var apiKey = this.GetApiKey();
-            var publicId = Guid.NewGuid().ToString() + ":" + this.StripExtension(formFile.FileName);
-            var signature = this.GetSignature(currentTimestamp, publicId);
+            var currentTimestamp = GetUnixTimestamp();
+            var apiKey = GetApiKey();
+            var publicId = Guid.NewGuid().ToString() + ":" + StripExtension(formFile.FileName);
+            var signature = GetSignature(currentTimestamp, publicId);
 
-            string file = Convert.ToBase64String(this.ReadFileBytes(formFile));
+            string file = Convert.ToBase64String(ReadFileBytes(formFile));
             var json = JsonConvert.SerializeObject(new
             {
                 file = HttpUtility.HtmlEncode($"data:{formFile.ContentType};base64,") + file,
                 timestamp = currentTimestamp,
                 public_id = publicId,
                 api_key = apiKey,
-                signature = signature
+                signature
             });
 
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, string.Format(CloudinaryUrl, this.configuration["Cloudinary:CloudName"]))
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, string.Format(CloudinaryUrl, configuration["Cloudinary:CloudName"]))
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
@@ -102,7 +102,7 @@ namespace Gettit.Service
             }
 
             var deserializedResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(await httpResponse.Content.ReadAsStringAsync());
-            this._logger.LogError(deserializedResponse["error"].ToString());
+            _logger.LogError(deserializedResponse["error"].ToString());
 
             return null;
         }

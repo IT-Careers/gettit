@@ -1,8 +1,7 @@
-﻿using Gettit.Service;
+﻿using Gettit.Service.Cloud;
 using Gettit.Service.Community;
 using Gettit.Service.Models;
 using Gettit.Web.Models.Community;
-using Gettit.Web.Models.Thread;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gettit.Web.Controllers

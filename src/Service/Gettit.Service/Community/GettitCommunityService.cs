@@ -2,7 +2,6 @@
 using Gettit.Data.Repositories;
 using Gettit.Service.Mappings;
 using Gettit.Service.Models;
-using Gettit.Service.Tag;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gettit.Service.Community
@@ -11,12 +10,14 @@ namespace Gettit.Service.Community
     {
         private readonly GettitCommunityRepository gettitCommunityRepository;
 
-        private readonly IGettitTagService gettitTagService;
+        private readonly GettitTagRepository gettitTagRepository;
 
-        public GettitCommunityService(GettitCommunityRepository gettitCommunityRepository, IGettitTagService gettitTagService)
+        public GettitCommunityService(
+            GettitCommunityRepository gettitCommunityRepository, 
+            GettitTagRepository gettitTagRepository)
         {
             this.gettitCommunityRepository = gettitCommunityRepository;
-            this.gettitTagService = gettitTagService;
+            this.gettitTagRepository = gettitTagRepository;
         }
 
         public async Task<GettitCommunityServiceModel> CreateAsync(GettitCommunityServiceModel model)
@@ -24,17 +25,12 @@ namespace Gettit.Service.Community
             GettitCommunity gettitCommunity = model.ToEntity();
 
             gettitCommunity.Tags = gettitCommunity.Tags.Select(async tag => {
-                return (await this.gettitTagService.InternalCreateAsync(tag));
+                return (await this.gettitTagRepository.CreateAsync(tag));
             }).Select(t => t.Result).ToList();
 
             await gettitCommunityRepository.CreateAsync(gettitCommunity);
 
             return gettitCommunity.ToModel();
-        }
-
-        public Task<GettitCommunity> InternalCreateAsync(GettitCommunity model)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<GettitCommunityServiceModel> DeleteAsync(string id)
@@ -70,11 +66,6 @@ namespace Gettit.Service.Community
                 .Include(c => c.UpdatedBy)
                 .Include(c => c.DeletedBy)
                 .SingleOrDefaultAsync(c => c.Id == id))?.ToModel();
-        }
-
-        public async Task<GettitCommunity> InternalGetByIdAsync(string id)
-        {
-            return await gettitCommunityRepository.GetAll().SingleOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<GettitCommunityServiceModel> UpdateAsync(string id, GettitCommunityServiceModel model)

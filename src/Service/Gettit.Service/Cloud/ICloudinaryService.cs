@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Gettit.Service
+namespace Gettit.Service.Cloud
 {
     public interface ICloudinaryService
     {
