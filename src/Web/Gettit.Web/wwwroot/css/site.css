@@ -533,6 +533,7 @@ body {
     padding: 5px 15px 10px 10px;
     border-radius: 25px;
     border: 2px solid #FFFFFF;
+    cursor: pointer;
 }
 
     .comment-footer-replies div {
@@ -549,4 +550,40 @@ body {
     padding: 5px 10px 10px 10px;
     border-radius: 25px;
     border: 2px solid #FFFFFF;
-    /* END DETAILS THREAD STYLING */
+}
+
+
+.comment-reply-input-field {
+    padding: 25px 0 0 0;
+    background: transparent;
+}
+
+    .comment-reply-input-field textarea {
+        background: transparent;
+        color: #FFFFFF;
+        font-weight: bold;
+        resize: none;
+    }
+
+        .comment-reply-input-field textarea:focus {
+            background: transparent;
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .comment-reply-input-field textarea::placeholder {
+            color: #888;
+            font-weight: bold;
+        }
+
+.comment-reply-button-holder {
+    position: relative;
+    bottom: 65px;
+}
+
+.details-thread-comment-replies {
+    margin-top: 35px;
+    margin-left: 35px;
+}
+
+/* END DETAILS THREAD STYLING */

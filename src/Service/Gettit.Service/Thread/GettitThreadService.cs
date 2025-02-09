@@ -49,9 +49,22 @@ namespace Gettit.Service.Thread
             return gettitThread.ToModel();
         }
 
-        public async Task<CommentServiceModel> CreateCommentOnThread(string threadId, CommentServiceModel commentServiceModel)
+        public async Task<CommentServiceModel> CreateCommentOnThread(CommentServiceModel commentServiceModel, string threadId, string? parentCommentId = null)
         {
             Data.Models.Comment entity = commentServiceModel.ToEntity();
+
+            if (parentCommentId != null)
+            {
+                Data.Models.Comment? parent = await commentRepository.GetAll()
+                    .SingleOrDefaultAsync(c => c.Id == parentCommentId);
+
+                if (parent == null)
+                {
+                    throw new ArgumentException("Parent comment not found for id - " + parentCommentId);
+                }
+
+                entity.Parent = parent;
+            }
 
             entity = await this.commentRepository.CreateAsync(entity);
 
@@ -66,7 +79,7 @@ namespace Gettit.Service.Thread
 
             await this.gettitThreadRepository.UpdateAsync(commentThread);
 
-            return entity.ToModel();
+            return entity.ToModel(CommentMappingsContext.Reaction);
         }
 
         public Task<GettitThreadServiceModel> DeleteAsync(string id)
@@ -102,11 +115,6 @@ namespace Gettit.Service.Thread
                 .Include(t => t.Community)
                 .Include(t => t.Reactions)
                 .Include(t => t.Comments)
-                    .ThenInclude(utc => utc.Comment)
-                        .ThenInclude(c => c.Replies)
-                .Include(t => t.Comments)
-                    .ThenInclude(utc => utc.Comment)
-                        .ThenInclude(c => c.Reactions)
                 .Include(t => t.CreatedBy)
                 .Include(t => t.UpdatedBy)
                 .Include(t => t.DeletedBy);

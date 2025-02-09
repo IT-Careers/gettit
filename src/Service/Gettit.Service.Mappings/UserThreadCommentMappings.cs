@@ -17,7 +17,7 @@ namespace Gettit.Service.Mappings
             return new UserThreadCommentServiceModel
             {
                 Id = entity.Id,
-                Comment = ShouldMapComments(context) ? entity.Comment?.ToModel() : null,
+                Comment = ShouldMapComments(context) ? entity.Comment?.ToModel(CommentMappingsContext.Parent) : null,
                 Thread = ShouldMapThread(context) ? entity.Thread?.ToModel() : null,
                 User = ShouldMapUser(context) ? entity.User?.ToModel() : null
             };
