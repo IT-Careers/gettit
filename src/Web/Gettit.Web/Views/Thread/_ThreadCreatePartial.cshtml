@@ -15,7 +15,9 @@
     </div>
     <div class="mb-3">
         <label asp-for="@Model.Content" class="form-label fw-bold">Content</label>
-        <textarea asp-for="@Model.Content" class="form-control" aria-required="true" placeholder="Thread content..." rows="5"></textarea>
+        <textarea asp-for="@Model.Content" id="createThreadRealTextArea" class="form-control" aria-required="true" placeholder="Thread content..." hidden></textarea>
+        <trix-toolbar id="createThreadToolbar"></trix-toolbar>
+        <trix-editor id="createThreadTextEditor" toolbar="createThreadToolbar" input="createThreadInput"></trix-editor>
         <span asp-validation-for="@Model.Content" class="text-danger"></span>
     </div>
     <div class="mb-3">
@@ -52,13 +54,14 @@
             }
         </div>
     </div>
-    <button class="btn btn-secondary" type="button">Post</button>
+    <button class="btn btn-secondary create-thread-submit-button" type="button">Post</button>
 </form>
 
 <script>
     const currentTags = [];
 
-    document.querySelector('#create-thread-form button').addEventListener('click', (e) => {
+    document.querySelector('#create-thread-form .create-thread-submit-button').addEventListener('click', (e) => {
+        document.querySelector('#createThreadRealTextArea').value = document.querySelector('#createThreadTextEditor').innerHTML;
         document.querySelector('#create-thread-form').submit();
     });
 

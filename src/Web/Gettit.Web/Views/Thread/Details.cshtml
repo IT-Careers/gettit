@@ -12,7 +12,7 @@
     <main class="page-thread-content mt-4">
         <h4 class="page-thread-content-name">@Model.Title</h4>
         <p class="page-thread-content-preview mt-3">
-            @Model.Content
+            @Html.Raw(Model.Content)
         </p>
     </main>
     <footer class="page-thread-footer d-flex justify-content-start">
@@ -36,6 +36,8 @@
 
 <div class="comment-input-field">
     <textarea class="form-control" rows="1" placeholder="Post a comment..."></textarea>
+    <trix-toolbar id="my_toolbar" hidden></trix-toolbar>
+    <trix-editor toolbar="my_toolbar" input="my_input" hidden></trix-editor>
     <div class="comment-button-holder d-none justify-content-end p-3">
         <button class="btn btn-secondary fw-bold me-3 comment-cancel-button">Cancel</button>
         <button class="btn btn-primary fw-bold comment-submit-button">Comment</button>
@@ -50,16 +52,22 @@
     // COMMENT FUNCTIONALITIES
 
     const textArea = document.querySelector('.comment-input-field textarea');
+    const trixToolbar = document.querySelector('.comment-input-field trix-toolbar');
+    const trixEditor = document.querySelector('.comment-input-field trix-editor');
     const threadId = document.querySelector('.thread-id').id;
 
     const showCommentActions = () => {
-        textArea.rows = 4;
+        textArea.hidden = true;
+        trixToolbar.hidden = false;
+        trixEditor.hidden = false;
         document.querySelector('.comment-button-holder').classList.remove('d-none');
         document.querySelector('.comment-button-holder').classList.add('d-flex');
     }
 
     const hideCommentActions = () => {
-        textArea.rows = 1;
+        textArea.hidden = false;
+        trixToolbar.hidden = true;
+        trixEditor.hidden = true;
         document.querySelector('.comment-button-holder').classList.remove('d-flex');
         document.querySelector('.comment-button-holder').classList.add('d-none');
     }
@@ -182,8 +190,8 @@
     });
 
     document.querySelector('.comment-input-field .comment-submit-button').addEventListener('click', (e) => {
-        const commentContent = textArea.value;
-        textArea.value = '';
+        const commentContent = trixEditor.innerHTML;
+        trixEditor.innerHTML = '';
         hideCommentActions();
         fetch('/Thread/Comment?threadId=' + threadId, {
             method: 'POST',
@@ -202,7 +210,7 @@
     });
 
     document.querySelector('.comment-input-field .comment-cancel-button').addEventListener('click', (e) => {
-        textArea.value = '';
+        trixEditor.innerHTML = '';
         hideCommentActions();
     });
 

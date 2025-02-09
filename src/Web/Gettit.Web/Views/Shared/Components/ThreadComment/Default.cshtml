@@ -13,7 +13,7 @@
         </header>
         <main class="comment-content mt-4">
             <p class="comment-content-preview mt-3">
-                @comment.Content
+                @Html.Raw(@comment.Content)
             </p>
         </main>
         <footer class="comment-footer d-flex justify-content-start">
