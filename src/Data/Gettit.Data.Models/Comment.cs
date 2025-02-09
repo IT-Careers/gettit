@@ -9,5 +9,7 @@
         public List<UserCommentReaction> Reactions { get; set; }
 
         public List<Comment> Replies { get; set; }
+
+        public Comment? Parent { get; set; }
     }
 }

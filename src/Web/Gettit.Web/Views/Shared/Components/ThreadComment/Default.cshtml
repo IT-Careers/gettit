@@ -1,0 +1,39 @@
+﻿@model List<CommentServiceModel>
+
+@foreach (var comment in Model.OrderByDescending(c => c.CreatedOn))
+{
+    <div class="details-thread-comment">
+        <span id="@comment.Id" class="comment-id" hidden></span>
+        <header class="comment-heading d-flex justify-content-start">
+            <div class="comment-heading-user-thumbnail">
+                <img src="~/images/monkas.jpg" width="45px" height="45px">
+            </div>
+            <div class="comment-heading-username h5 ms-3 mt-1">@comment.CreatedBy?.UserName</div>
+            <div class="comment-heading-timestamp ms-3 mt-1">@comment.CreatedOn.ToString("dd/MM/yyyy HH:mm")</div>
+        </header>
+        <main class="comment-content mt-4">
+            <p class="comment-content-preview mt-3">
+                @comment.Content
+            </p>
+        </main>
+        <footer class="comment-footer d-flex justify-content-start">
+            <div class="comment-footer-reactions d-flex justify-content-start">
+                <img class="mt-1" src="~/images/reaction.svg" width="20px" height="20px">
+                <div class="ms-2">@comment.Reactions?.Count</div>
+            </div>
+            <div class="comment-footer-replies d-flex justify-content-start ms-4">
+                <img class="mt-1" src="~/images/comment.svg" width="20px" height="20px">
+                <div class="ms-2">@comment.Replies?.Count</div>
+            </div>
+            <div class="comment-footer-share ms-4">
+                <img src="~/images/share.svg" width="20px" height="20px">
+            </div>
+        </footer>
+        <div class="details-thread-comment-replies">
+            @if (comment.Replies?.Count > 0)
+            {
+                <vc:thread-comment parent-id="@comment.Id"></vc:thread-comment>
+            }
+        </div>
+    </div>
+}

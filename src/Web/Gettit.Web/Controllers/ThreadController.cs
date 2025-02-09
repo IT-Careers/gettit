@@ -61,13 +61,16 @@ namespace Gettit.Web.Controllers
 
         [HttpPost]
         [Consumes("application/json")]
-        public async Task<IActionResult> Comment([FromQuery] string threadId, [FromBody] CreateCommentModel model)
+        public async Task<IActionResult> Comment(
+            [FromBody] CreateCommentModel model,
+            [FromQuery] string threadId,
+            [FromQuery] string? parentId = null)
         {
-            var result = await this._gettitThreadService.CreateCommentOnThread(threadId, new CommentServiceModel
+            var result = await this._gettitThreadService.CreateCommentOnThread(new CommentServiceModel
             {
                 Content = model.Content,
                 //Attachments
-            });
+            }, threadId, parentId);
 
             return Ok(result);
         }

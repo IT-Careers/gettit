@@ -10,7 +10,7 @@ namespace Gettit.Service.Mappings
             return new UserCommentReactionServiceModel
             {
                 Id = entity.Id,
-                Comment = entity.Comment?.ToModel(),
+                Comment = entity.Comment?.ToModel(CommentMappingsContext.Reaction),
                 Reaction = entity.Reaction?.ToModel(),
                 User = entity.User?.ToModel()
             };
