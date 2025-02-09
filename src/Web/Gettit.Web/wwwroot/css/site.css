@@ -8,6 +8,10 @@ body {
     color: #FFFFFF;
 }
 
+trix-toolbar .trix-button {
+    background: #fff !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -481,7 +485,7 @@ body {
     font-weight: bold;
 }
 
-.comment-button-holder {
+.comment-button-holder .btn {
     position: relative;
     bottom: 65px;
 }
@@ -576,7 +580,7 @@ body {
             font-weight: bold;
         }
 
-.comment-reply-button-holder {
+.comment-reply-button-holder .btn {
     position: relative;
     bottom: 65px;
 }

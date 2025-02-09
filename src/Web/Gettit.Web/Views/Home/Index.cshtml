@@ -16,7 +16,7 @@
             <a class="plain-link" href="/Thread/Details?threadId=@thread.Id">
                 <h4 class="page-thread-content-name">@thread.Title</h4>
                 <p class="page-thread-content-preview mt-3">
-                    @thread.Content
+                    @Html.Raw(thread.Content)
                 </p>
             </a>
         </main>
