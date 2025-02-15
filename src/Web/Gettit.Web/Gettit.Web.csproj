@@ -23,4 +23,9 @@
     <ProjectReference Include="..\Gettit.Web.Models\Gettit.Web.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Areas\Administration\Models\" />
+  </ItemGroup>
+
 </Project>

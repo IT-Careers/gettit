@@ -1,0 +1,18 @@
+﻿@model CreateReactionModel
+
+<h1>Create Reaction</h1>
+<form asp-controller="Reaction" asp-action="CreateConfirm" method="post" id="create-reaction-form" class="w-50" enctype="multipart/form-data">
+    <hr class="hr-2 mb-5 hr-white" />
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="mb-3">
+        <label asp-for="@Model.Label" class="form-label fw-bold">Label</label>
+        <input asp-for="@Model.Label" class="form-control" aria-required="true" placeholder="Reaction label..." />
+        <span asp-validation-for="@Model.Label" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="@Model.Reaction" class="form-label fw-bold">Reaction</label>
+        <input asp-for="@Model.Reaction" aria-required="true" class="form-control form-control-lg" type="file">
+        <span asp-validation-for="@Model.Reaction" class="text-danger"></span>
+    </div>
+    <button class="btn btn-secondary mt-4" type="submit">Create</button>
+</form>

@@ -6,5 +6,7 @@ namespace Gettit.Service.Thread
     public interface IGettitThreadService : IGenericService<GettitThread, GettitThreadServiceModel>
     {
         Task<CommentServiceModel> CreateCommentOnThread(CommentServiceModel commentServiceModel, string threadId, string? parentCommentId = null);
+
+        Task<UserThreadReactionServiceModel> CreateReactionOnThread(string threadId, string reactionId);
     }
 }

@@ -49,6 +49,15 @@ trix-toolbar .trix-button {
     color: #FFFFFF;
 }
 
+.admin-sidebar {
+    margin-top: 5%;
+}
+
+.admin-sidebar-separator {
+    width: 88.5%;
+    margin: 0;
+}
+
 .sidebar-navigation-category {
     cursor: pointer;
 }
@@ -121,6 +130,11 @@ trix-toolbar .trix-button {
     color: #A9A9A9;
 }
 
+    .sidebar-other-link a {
+        text-decoration: none;
+        color: #A9A9A9;
+    }
+
 .sidebar-bottom {
     width: 100%;
     position: absolute;
@@ -162,6 +176,14 @@ trix-toolbar .trix-button {
 /* LOGO STYLING */
 #logo {
     position: fixed;
+    left: 3.5%;
+    height: 5vh;
+    color: #FFFFFF;
+}
+
+#admin-logo {
+    position: fixed;
+    left: 3%;
     height: 5vh;
     color: #FFFFFF;
 }
@@ -591,3 +613,33 @@ trix-toolbar .trix-button {
 }
 
 /* END DETAILS THREAD STYLING */
+
+
+/* REACTIONS STYLING */
+
+.create-reaction-button {
+    margin-top: 10px;
+    font-size: 18px !important;
+}
+
+.reactions-container {
+    top: 10px;
+    position: relative;
+    width: fit-content;
+    overflow-x: auto;
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+.reaction-emote {
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 10px;
+}
+
+.reaction-emote:not(:first-child) {
+    margin-left: 10px;
+}
+
+/* END REACTIONS STYLING */

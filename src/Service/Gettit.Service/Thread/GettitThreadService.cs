@@ -17,6 +17,8 @@ namespace Gettit.Service.Thread
 
         private readonly CommentRepository commentRepository;
 
+        private readonly ReactionRepository reactionRepository;
+
         private readonly IUserContextService userContextService;
 
         public GettitThreadService(
@@ -24,13 +26,15 @@ namespace Gettit.Service.Thread
             GettitTagRepository gettitTagRepository,
             GettitCommunityRepository gettitCommunityRepository,
             CommentRepository commentRepository,
-            IUserContextService userContextService)
+            IUserContextService userContextService,
+            ReactionRepository reactionRepository)
         {
             this.gettitThreadRepository = gettitThreadRepository;
             this.gettitTagRepository = gettitTagRepository;
             this.gettitCommunityRepository = gettitCommunityRepository;
             this.commentRepository = commentRepository;
             this.userContextService = userContextService;
+            this.reactionRepository = reactionRepository;
         }
 
         public async Task<GettitThreadServiceModel> CreateAsync(GettitThreadServiceModel model)
@@ -80,6 +84,26 @@ namespace Gettit.Service.Thread
             await this.gettitThreadRepository.UpdateAsync(commentThread);
 
             return entity.ToModel(CommentMappingsContext.Reaction);
+        }
+
+        public async Task<UserThreadReactionServiceModel> CreateReactionOnThread(string threadId, string reactionId)
+        {
+            GettitThread reactionThread = await this.InternalGetByIdAsync(threadId);
+            Data.Models.Reaction reaction = await reactionRepository.GetAll()
+                    .SingleOrDefaultAsync(r => r.Id == reactionId);
+
+            var utr = new UserThreadReaction
+            {
+                Reaction = reaction,
+                Thread = reactionThread,
+                User = (await this.userContextService.GetCurrentUserAsync())
+            };
+
+            reactionThread.Reactions.Add(utr);
+
+            await this.gettitThreadRepository.UpdateAsync(reactionThread);
+            
+            return utr.ToModel(UserThreadReactionMappingsContext.User);
         }
 
         public Task<GettitThreadServiceModel> DeleteAsync(string id)

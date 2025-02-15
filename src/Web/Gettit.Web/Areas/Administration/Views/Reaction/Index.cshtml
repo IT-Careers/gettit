@@ -1,0 +1,33 @@
+﻿@model List<ReactionServiceModel>
+
+<div class="d-flex justify-content-between">
+    <h1>Reactions</h1>
+    <div>
+        <a href="/Administration/Reaction/Create" class="btn btn-secondary fw-bold create-reaction-button">Create</a>
+    </div>
+</div>
+<hr class="hr-2 bg-white" />
+<table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+            <th class="col-3">#</th>
+            <th class="col-3">Image</th>
+            <th class="col-3">Reaction</th>
+            <th class="col-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var reaction in Model) 
+        {
+            <tr>
+                <th class="col-3">@reaction.Id</th>
+                <td class="col-3"><img src="@reaction.Emote.CloudUrl" width="50" height="50"></td>
+                <td class="col-3">@reaction.Label</td>
+                <td class="col-2">
+                    <a href="/Administration/Reaction/Edit?id=@reaction.Id" class="btn btn-warning">Edit</a>
+                    <a href="/Administration/Reaction/Delete?id=@reaction.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

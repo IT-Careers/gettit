@@ -222,11 +222,6 @@
         const commentReplyInputFieldContainer = document.createElement('div');
         commentReplyInputFieldContainer.classList.add('comment-reply-input-field');
 
-        const commentReplyTextArea = document.createElement('textarea');
-        commentReplyTextArea.classList.add('form-control');
-        commentReplyTextArea.rows = 4;
-        commentReplyTextArea.placeholder = 'Post a reply...';
-
         const commentReplyButtonContainer = document.createElement('div');
         commentReplyButtonContainer.classList.add('comment-reply-button-holder', 'd-flex', 'justify-content-end', 'p-3');
 
@@ -243,7 +238,7 @@
         commentReplySubmitButton.textContent = 'Reply';
 
         commentReplySubmitButton.addEventListener('click', (e) => {
-            const commentContent = e.target.parentElement.parentElement.querySelector('textarea').value;
+            const commentContent = e.target.parentElement.parentElement.querySelector('trix-editor').innerHTML;
             const parentCommentId = e.target.parentElement.parentElement.parentElement.querySelector('.comment-id').id;
             fetch(`/Thread/Comment?threadId=${threadId}&parentId=${parentCommentId}`, {
                 method: 'POST',
@@ -254,7 +249,6 @@
             })
                 .then((res) => res.json())
                 .then((json) => {
-                    console.log(e.target.parentElement.parentElement.parentElement);
                     createCommentAfterRequest(json, 
                         e.target.parentElement.parentElement.parentElement.querySelector('.details-thread-comment-replies .details-thread-comment:first-child'),
                         e.target.parentElement.parentElement.parentElement.querySelector('.details-thread-comment-replies')
@@ -263,11 +257,16 @@
                 })
                 .catch((error) => console.error(error));
         });
-
+        
         commentReplyButtonContainer.appendChild(commentReplyCancelButton);
         commentReplyButtonContainer.appendChild(commentReplySubmitButton);
 
-        commentReplyInputFieldContainer.appendChild(commentReplyTextArea);
+        var uniqueId = '@Guid.NewGuid().ToString()';
+
+        commentReplyInputFieldContainer.innerHTML = `
+            <trix-toolbar id="my_toolbar_${uniqueId}"></trix-toolbar>
+            <trix-editor toolbar="my_toolbar_${uniqueId}" input="my_input_${uniqueId}"></trix-editor>`;
+
         commentReplyInputFieldContainer.appendChild(commentReplyButtonContainer);
 
         let targetFooter = clickedButton;

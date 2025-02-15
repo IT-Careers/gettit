@@ -37,5 +37,69 @@
                 <img src="~/images/share.svg" width="20px" height="20px">
             </div>
         </footer>
+        <div class="reactions-container d-none flex-row">
+            <span hidden class="thread-id" data-id="@thread.Id"></span>
+            @foreach (var reaction in (List<ReactionServiceModel>)ViewData["Reactions"]) 
+            {
+                <div class="reaction-emote">
+                    <span hidden class="reaction-id" data-id="@reaction.Id"></span>
+                    <img src="@reaction.Emote.CloudUrl" width="35px" height="35px" />
+                </div>
+            }
+        </div>
     </div>
 }
+
+<script>
+    const hideAllReactions = () => {
+        [...document.querySelectorAll('.reactions-container')].forEach(r => {
+            r.classList.remove('d-none');
+            r.classList.remove('d-flex');
+            r.classList.add('d-none');
+        })
+    }
+
+    [...document.querySelectorAll('.page-thread-footer-reactions')].forEach(r => r.addEventListener('click', (e) => {
+        let targetElement = e.target;
+
+        while(![...targetElement.classList].includes('page-thread-footer') && targetElement.tagName.toLowerCase() !== 'html') {
+            targetElement = targetElement.parentElement;
+        }
+
+        if([...targetElement.nextElementSibling.classList].includes('d-flex')) {
+            targetElement.nextElementSibling.classList.remove('d-flex');
+            targetElement.nextElementSibling.classList.add('d-none');
+            return;
+        }
+
+        hideAllReactions();
+        
+        targetElement.nextElementSibling.classList.remove('d-none');
+        targetElement.nextElementSibling.classList.add('d-flex');
+    }));
+
+    [...document.querySelectorAll('.reaction-emote')].forEach(re => re.addEventListener('click', (e) => {
+        let targetElement = e.target;
+
+        while(![...targetElement.classList].includes('reaction-emote') && targetElement.tagName.toLowerCase() !== 'html') {
+            targetElement = targetElement.parentElement;
+        }
+        
+        const reactionId = targetElement.querySelector('.reaction-id').dataset.id;
+        const threadId = targetElement.parentElement.querySelector('.thread-id').dataset.id;
+
+        fetch(`/Thread/React?threadId=${threadId}&reactionId=${reactionId}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => res.json())
+            .then((json) => {
+                hideAllReactions();
+                const currentReactionsCountElement = targetElement.parentElement.previousElementSibling.querySelector('.page-thread-footer-reactions div');
+                currentReactionsCountElement.textContent = Number(currentReactionsCountElement.textContent) + 1;
+            })
+            .catch((error) => console.error(error));
+    }));
+</script>
