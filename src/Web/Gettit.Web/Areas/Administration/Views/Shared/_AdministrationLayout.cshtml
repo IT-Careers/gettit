@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<GettitUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gettit.Web</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Gettit.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid ps-4">
+        <header id="topbar" class="mt-3">
+            <div id="topbar-logo-container" class="d-flex justify-content-center">
+                <div id="admin-logo">
+                    <a href="/">
+                        <img width="100px" height="60px" src="~/images/gettit-logo.png" />
+                    </a>
+                </div>
+            </div>
+        </header>
+        <main class="d-flex justify-content-start">
+            <aside id="sidebar" class="admin-sidebar">
+                <hr class="hr-2 bg-white admin-sidebar-separator" />
+                <!-- Navigation items (about / etc.) -->
+                <div class="sidebar-other-link"><a href="/Administration/Home">Communities</a></div>
+                <div class="sidebar-other-link"><a href="/Administration/Home">Threads</a></div>
+                <div class="sidebar-other-link"><a href="/Administration/Home">Comments</a></div>
+                <div class="sidebar-other-link"><a href="/Administration/Reaction">Reactions</a></div>
+                <hr class="hr-2 bg-white admin-sidebar-separator" />
+                <div class="sidebar-other-link"><a href="/Administration/Home">Users</a></div>
+                <div class="sidebar-other-link"><a href="/Administration/Home">Roles</a></div>
+
+                <partial name="_LoginPartial" />
+            </aside>
+            <main id="main-content">
+                @RenderBody()
+            </main>
+        </main>
+    </div>
+    <script>
+        [...document.querySelectorAll('.sidebar-navigation-category')]
+        .forEach(el => el.addEventListener('click', function () {
+            if(![...this.classList].includes('sidebar-navigation-category-expanded')) {
+                this.querySelector('.sidebar-navigation-category-arrow-down')
+                .classList
+                .add('sidebar-navigation-category-arrow-down-transform');
+                this.classList.add('sidebar-navigation-category-expanded');
+                this.nextElementSibling.style.overflow = 'auto';
+                this.nextElementSibling.style.height = (this.nextElementSibling.children[0].clientHeight + 30) + 'px';
+            } else {
+                this.querySelector('.sidebar-navigation-category-arrow-down')
+                .classList
+                .remove('sidebar-navigation-category-arrow-down-transform');
+                this.classList.remove('sidebar-navigation-category-expanded');
+                this.nextElementSibling.style.overflow = 'hidden';
+                this.nextElementSibling.style.height = "0px";
+            }
+        }));
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

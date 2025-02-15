@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Gettit.Service.Reaction;
 using Gettit.Service.Thread;
 using Gettit.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +10,18 @@ namespace Gettit.Web.Controllers
     {
         private readonly IGettitThreadService _gettitThreadService;
 
-        public HomeController(IGettitThreadService gettitThreadService)
+        private readonly IReactionService _reactionService;
+
+        public HomeController(IGettitThreadService gettitThreadService, IReactionService reactionService)
         {
             _gettitThreadService = gettitThreadService;
+            _reactionService = reactionService;
         }
 
         public IActionResult Index()
         {
             this.ViewData["Threads"] = this._gettitThreadService.GetAll().ToList();
+            this.ViewData["Reactions"] = this._reactionService.GetAll().ToList();
             return View();
         }
 

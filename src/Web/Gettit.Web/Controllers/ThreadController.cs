@@ -74,5 +74,16 @@ namespace Gettit.Web.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        public async Task<IActionResult> React(
+            [FromQuery] string threadId,
+            [FromQuery] string reactionId)
+        {
+            var result = await this._gettitThreadService.CreateReactionOnThread(threadId, reactionId);
+
+            return Ok(result);
+        }
     }
 }
