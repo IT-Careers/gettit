@@ -8,5 +8,7 @@ namespace Gettit.Service.Thread
         Task<CommentServiceModel> CreateCommentOnThread(CommentServiceModel commentServiceModel, string threadId, string? parentCommentId = null);
 
         Task<UserThreadReactionServiceModel> CreateReactionOnThread(string threadId, string reactionId);
+
+        IQueryable<GettitThreadServiceModel> GetAllByCommunityId(string communityId);
     }
 }

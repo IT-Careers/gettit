@@ -1,6 +1,8 @@
 ﻿using Gettit.Service.Cloud;
 using Gettit.Service.Community;
 using Gettit.Service.Models;
+using Gettit.Service.Reaction;
+using Gettit.Service.Thread;
 using Gettit.Web.Models.Community;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +12,22 @@ namespace Gettit.Web.Controllers
     {
         private readonly IGettitCommunityService gettitCommunityService;
 
+        private readonly IGettitThreadService gettitThreadService;
+
+        private readonly IReactionService reactionService;
+
         private readonly ICloudinaryService cloudinaryService;
 
-        public CommunityController(IGettitCommunityService gettitCommunityService, 
-            ICloudinaryService cloudinaryService)
+        public CommunityController(
+            IGettitCommunityService gettitCommunityService,
+            ICloudinaryService cloudinaryService,
+            IGettitThreadService gettitThreadService,
+            IReactionService reactionService)
         {
             this.gettitCommunityService = gettitCommunityService;
             this.cloudinaryService = cloudinaryService;
+            this.gettitThreadService = gettitThreadService;
+            this.reactionService = reactionService;
         }
 
         [HttpGet]
@@ -44,6 +55,15 @@ namespace Gettit.Web.Controllers
             return Redirect("/");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(string communityId)
+        {
+            this.ViewData["Threads"] = this.gettitThreadService.GetAllByCommunityId(communityId).ToList();
+            this.ViewData["Reactions"] = this.reactionService.GetAll().ToList();
+
+            return View(await this.gettitCommunityService.GetByIdAsync(communityId));
+        }
+            
         private async Task<string> UploadPhoto(IFormFile photo)
         {
             var uploadResponse = await this.cloudinaryService.UploadFile(photo);

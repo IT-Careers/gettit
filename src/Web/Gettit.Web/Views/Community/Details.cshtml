@@ -1,6 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model GettitCommunityServiceModel
+
+<div class="community-details">
+    <header>
+        <div class="community-details-banner">
+            <img src="@Model.BannerPhoto.CloudUrl" />
+        </div>
+        <div class="community-details-info">
+            <img src="@Model.ThumbnailPhoto.CloudUrl" />
+            <div>g/@Model.Name</div>
+        </div>
+    </header>
+    <main>
+
+    </main>
+</div>
 
 @foreach (var thread in (List<GettitThreadServiceModel>)ViewData["Threads"])
 {
@@ -22,18 +35,20 @@
         </main>
         @{
             var groupedReactions = thread.Reactions.Aggregate(new Dictionary<string, int>(), (accumulator, utr) =>
-                    {
-                        if(!accumulator.ContainsKey(utr.Reaction.Emote.CloudUrl)) {
-                            accumulator[utr.Reaction.Emote.CloudUrl] = 0;
-                        }
+            {
+                if (!accumulator.ContainsKey(utr.Reaction.Emote.CloudUrl))
+                {
+                    accumulator[utr.Reaction.Emote.CloudUrl] = 0;
+                }
 
-                        accumulator[utr.Reaction.Emote.CloudUrl]++;
+                accumulator[utr.Reaction.Emote.CloudUrl]++;
 
-                        return accumulator;
-                    });
+                return accumulator;
+            });
         }
         <div class="user-reactions-container d-flex flex-row">
-            @foreach(var reaction in groupedReactions.OrderByDescending(gr => gr.Value)) {
+            @foreach (var reaction in groupedReactions.OrderByDescending(gr => gr.Value))
+            {
                 <div class="user-reaction d-flex justify-content-start">
                     <img class="mt-1" src="@reaction.Key" width="15px" height="15px">
                     <div class="ms-2">@reaction.Value</div>
@@ -59,7 +74,7 @@
         </footer>
         <div class="reactions-container d-none flex-row">
             <span hidden class="thread-id" data-id="@thread.Id"></span>
-            @foreach (var reaction in (List<ReactionServiceModel>)ViewData["Reactions"]) 
+            @foreach (var reaction in (List<ReactionServiceModel>)ViewData["Reactions"])
             {
                 <div class="reaction-emote">
                     <span hidden class="reaction-id" data-id="@reaction.Id"></span>
@@ -93,7 +108,7 @@
         }
 
         hideAllReactions();
-        
+
         targetElement.nextElementSibling.classList.remove('d-none');
         targetElement.nextElementSibling.classList.add('d-flex');
     }));
@@ -104,7 +119,7 @@
         while(![...targetElement.classList].includes('reaction-emote') && targetElement.tagName.toLowerCase() !== 'html') {
             targetElement = targetElement.parentElement;
         }
-        
+
         const reactionId = targetElement.querySelector('.reaction-id').dataset.id;
         const threadId = targetElement.parentElement.querySelector('.thread-id').dataset.id;
 

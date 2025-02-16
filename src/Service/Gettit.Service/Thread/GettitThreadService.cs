@@ -117,6 +117,11 @@ namespace Gettit.Service.Thread
                 .Select(t => t.ToModel());
         }
 
+        public IQueryable<GettitThreadServiceModel> GetAllByCommunityId(string communityId)
+        {
+            return this.InternalGetAll().Where(t => t.Community.Id == communityId).Select(t => t.ToModel());
+        }
+
         public async Task<GettitThreadServiceModel> GetByIdAsync(string id)
         {
             return (await this.InternalGetAll().SingleOrDefaultAsync(thread => thread.Id == id))?.ToModel();
@@ -137,6 +142,7 @@ namespace Gettit.Service.Thread
             return gettitThreadRepository.GetAll()
                 .Include(t => t.Tags)
                 .Include(t => t.Community)
+                    .ThenInclude(c => c.ThumbnailPhoto)
                 .Include(t => t.Reactions)
                     .ThenInclude(utr => utr.Reaction)
                         .ThenInclude(r => r.Emote)
