@@ -15,6 +15,28 @@
             @Html.Raw(Model.Content)
         </p>
     </main>
+    @{
+        var groupedReactions = Model.Reactions.Aggregate(new Dictionary<string, int>(), (accumulator, utr) =>
+        {
+            if (!accumulator.ContainsKey(utr.Reaction.Emote.CloudUrl))
+            {
+                accumulator[utr.Reaction.Emote.CloudUrl] = 0;
+            }
+
+            accumulator[utr.Reaction.Emote.CloudUrl]++;
+
+            return accumulator;
+        });
+    }
+    <div class="user-reactions-container d-flex flex-row">
+        @foreach (var reaction in groupedReactions.OrderByDescending(gr => gr.Value))
+        {
+            <div class="user-reaction d-flex justify-content-start">
+                <img class="mt-1" src="@reaction.Key" width="15px" height="15px">
+                <div class="ms-2">@reaction.Value</div>
+            </div>
+        }
+    </div>
     <footer class="page-thread-footer d-flex justify-content-start">
         <div class="page-thread-footer-reactions d-flex justify-content-start">
             <img class="mt-1" src="~/images/reaction.svg" width="20px" height="20px">
@@ -45,7 +67,10 @@
 </div>
 
 <div class="details-thread-comments">
-    <vc:thread-comment thread-id="@Model.Id"></vc:thread-comment>
+    <vc:thread-comment 
+        thread-id="@Model.Id" 
+        reactions="@((List<ReactionServiceModel>)ViewData["Reactions"])">
+    </vc:thread-comment>
 </div>
 
 <script>
@@ -281,5 +306,59 @@
 
     [...replyButtons].forEach(rb => rb.addEventListener('click', (e) => {
         createReplyElement(e.target);
+    }));
+    
+    // REACTION FUNCTIONALITIES 
+
+    const hideAllReactions = () => {
+        [...document.querySelectorAll('.reactions-container')].forEach(r => {
+            r.classList.remove('d-none');
+            r.classList.remove('d-flex');
+            r.classList.add('d-none');
+        })
+    }
+
+    [...document.querySelectorAll('.comment-footer-reactions')].forEach(r => r.addEventListener('click', (e) => {
+        let targetElement = e.target;
+
+        while(![...targetElement.classList].includes('comment-footer') && targetElement.tagName.toLowerCase() !== 'html') {
+            targetElement = targetElement.parentElement;
+        }
+
+        if([...targetElement.nextElementSibling.classList].includes('d-flex')) {
+            targetElement.nextElementSibling.classList.remove('d-flex');
+            targetElement.nextElementSibling.classList.add('d-none');
+            return;
+        }
+
+        hideAllReactions();
+
+        targetElement.nextElementSibling.classList.remove('d-none');
+        targetElement.nextElementSibling.classList.add('d-flex');
+    }));
+
+    [...document.querySelectorAll('.reaction-emote')].forEach(re => re.addEventListener('click', (e) => {
+        let targetElement = e.target;
+
+        while(![...targetElement.classList].includes('reaction-emote') && targetElement.tagName.toLowerCase() !== 'html') {
+            targetElement = targetElement.parentElement;
+        }
+
+        const reactionId = targetElement.querySelector('.reaction-id').dataset.id;
+        const commentId = targetElement.parentElement.querySelector('.comment-id').dataset.id;
+
+        fetch(`/Comment/React?commentId=${commentId}&reactionId=${reactionId}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then((res) => res.json())
+            .then((json) => {
+                hideAllReactions();
+                const currentReactionsCountElement = targetElement.parentElement.previousElementSibling.querySelector('.comment-footer-reactions div');
+                currentReactionsCountElement.textContent = Number(currentReactionsCountElement.textContent) + 1;
+            })
+            .catch((error) => console.error(error));
     }));
 </script>

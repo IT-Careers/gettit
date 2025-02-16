@@ -20,6 +20,26 @@
                 </p>
             </a>
         </main>
+        @{
+            var groupedReactions = thread.Reactions.Aggregate(new Dictionary<string, int>(), (accumulator, utr) =>
+                    {
+                        if(!accumulator.ContainsKey(utr.Reaction.Emote.CloudUrl)) {
+                            accumulator[utr.Reaction.Emote.CloudUrl] = 0;
+                        }
+
+                        accumulator[utr.Reaction.Emote.CloudUrl]++;
+
+                        return accumulator;
+                    });
+        }
+        <div class="user-reactions-container d-flex flex-row">
+            @foreach(var reaction in groupedReactions.OrderByDescending(gr => gr.Value)) {
+                <div class="user-reaction d-flex justify-content-start">
+                    <img class="mt-1" src="@reaction.Key" width="15px" height="15px">
+                    <div class="ms-2">@reaction.Value</div>
+                </div>
+            }
+        </div>
         <footer class="page-thread-footer d-flex justify-content-start">
             <div class="page-thread-footer-reactions d-flex justify-content-start">
                 <img class="mt-1" src="~/images/reaction.svg" width="20px" height="20px">

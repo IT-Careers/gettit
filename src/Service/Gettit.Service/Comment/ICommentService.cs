@@ -7,5 +7,7 @@ namespace Gettit.Service.Comment
         IQueryable<CommentServiceModel> GetAllByParentId(string parentId);
 
         Task<IQueryable<CommentServiceModel>> GetAllByThreadId(string threadId);
+
+        Task<UserCommentReactionServiceModel> CreateReactionOnComment(string commentId, string reactionId);
     }
 }
