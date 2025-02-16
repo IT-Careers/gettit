@@ -5,6 +5,16 @@
 @foreach (var thread in (List<GettitThreadServiceModel>)ViewData["Threads"])
 {
     <div class="page-thread d-flex flex-column">
+        <div class="page-thread-attachment-container" hidden>
+            @foreach (var item in thread.Attachments)
+            {
+                var itemCloudUrl = item.CloudUrl;
+                var itemCloudUrlSplit = itemCloudUrl.Split(":");
+                var itemFileName = itemCloudUrlSplit[itemCloudUrlSplit.Length - 1];
+
+                <span data-file-name="@itemFileName" data-cloud-url="@itemCloudUrl" hidden></span>
+            }
+        </div>
         <header class="page-thread-heading d-flex justify-content-start">
             <div class="page-thread-heading-picture">
                 <img src="@thread.Community.ThumbnailPhoto.CloudUrl" width="45px" height="45px">
@@ -15,9 +25,9 @@
         <main class="page-thread-content mt-4">
             <a class="plain-link" href="/Thread/Details?threadId=@thread.Id">
                 <h4 class="page-thread-content-name">@thread.Title</h4>
-                <p class="page-thread-content-preview mt-3">
+                <div class="page-thread-content-preview mt-3">
                     @Html.Raw(thread.Content)
-                </p>
+                </div>
             </a>
         </main>
         @{
@@ -71,6 +81,31 @@
 }
 
 <script>
+    [...document.querySelectorAll('.page-thread-content-preview')].forEach(pageThreadContent => {
+        const pageThreadElement = pageThreadContent.parentElement.parentElement.parentElement;
+        const pageThreadAttachmentsContainer = pageThreadElement.querySelector('.page-thread-attachment-container');
+        const pageThreadAttachments = [...pageThreadAttachmentsContainer.querySelectorAll('span')];
+
+        const pageThreadFigures = [...pageThreadContent.querySelectorAll('figure')];
+
+        pageThreadFigures.forEach(pageThreadFigure => {
+            const pageThreadFigureAttachmentDetails = JSON.parse(pageThreadFigure.dataset.trixAttachment);
+            
+            const correspondingAttachment = pageThreadAttachments
+                .filter(a => a.dataset.fileName === pageThreadFigureAttachmentDetails.filename)[0];
+            
+            if(correspondingAttachment) {
+                const pageThreadFigureImage = pageThreadFigure.querySelector('img');
+
+                if(pageThreadFigureImage) {
+                    pageThreadFigureImage.src = correspondingAttachment.dataset.cloudUrl;
+                }
+            }
+        });
+
+        pageThreadAttachmentsContainer.remove();
+    });
+
     const hideAllReactions = () => {
         [...document.querySelectorAll('.reactions-container')].forEach(r => {
             r.classList.remove('d-none');
