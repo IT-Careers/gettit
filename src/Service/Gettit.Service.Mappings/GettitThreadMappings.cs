@@ -12,6 +12,7 @@ namespace Gettit.Service.Mappings
                 Title = model.Title,
                 Content = model.Content,
                 Community = model.Community?.ToEntity(),
+                Attachments = model.Attachments.Select(a => a.ToEntity()).ToList(),
                 Tags = model.Tags?.Select(tag => tag.ToEntity()).ToList(),
             };
         }
@@ -25,6 +26,7 @@ namespace Gettit.Service.Mappings
                 Content = entity.Content,
                 Community = entity.Community?.ToModel(),
                 Tags = entity.Tags?.Select(tag => tag.ToModel()).ToList(),
+                Attachments = entity.Attachments?.Select(attachment => attachment.ToModel()).ToList(),
                 Reactions = entity.Reactions?.Select(reaction => reaction.ToModel(UserThreadReactionMappingsContext.Thread)).ToList(),
                 Comments = entity.Comments?.Select(comment => comment.ToModel(UserThreadCommentMappingsContext.Thread)).ToList(),
                 CreatedOn = entity.CreatedOn,

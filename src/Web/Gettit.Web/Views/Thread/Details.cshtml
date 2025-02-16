@@ -2,6 +2,16 @@
 
 <div class="page-thread d-flex flex-column">
     <span id="@Model.Id" class="thread-id" hidden></span>
+    <div class="page-thread-attachment-container" hidden>
+        @foreach (var item in Model.Attachments)
+        {
+            var itemCloudUrl = item.CloudUrl;
+            var itemCloudUrlSplit = itemCloudUrl.Split(":");
+            var itemFileName = itemCloudUrlSplit[itemCloudUrlSplit.Length - 1];
+
+            <span data-file-name="@itemFileName" data-cloud-url="@itemCloudUrl" hidden></span>
+        }
+    </div>
     <header class="page-thread-heading d-flex justify-content-start">
         <div class="page-thread-heading-picture">
             <img src="@Model.Community.ThumbnailPhoto.CloudUrl" width="45px" height="45px">
@@ -11,9 +21,9 @@
     </header>
     <main class="page-thread-content mt-4">
         <h4 class="page-thread-content-name">@Model.Title</h4>
-        <p class="page-thread-content-preview mt-3">
+        <div class="page-thread-content-preview mt-3">
             @Html.Raw(Model.Content)
-        </p>
+        </div>
     </main>
     @{
         var groupedReactions = Model.Reactions.Aggregate(new Dictionary<string, int>(), (accumulator, utr) =>
@@ -74,6 +84,38 @@
 </div>
 
 <script>
+    // VARIABLES
+
+    let attachments = [];
+
+    // THREAD ATTACHMENT FUNCTIONALITIES
+
+    [...document.querySelectorAll('.page-thread-content-preview')].forEach(pageThreadContent => {
+        const pageThreadElement = pageThreadContent.parentElement.parentElement;
+        const pageThreadAttachmentsContainer = pageThreadElement.querySelector('.page-thread-attachment-container');
+        const pageThreadAttachments = [...pageThreadAttachmentsContainer.querySelectorAll('span')];
+
+        const pageThreadFigures = [...pageThreadContent.querySelectorAll('figure')];
+
+        pageThreadFigures.forEach(pageThreadFigure => {
+            const pageThreadFigureAttachmentDetails = JSON.parse(pageThreadFigure.dataset.trixAttachment);
+
+            const correspondingAttachment = pageThreadAttachments
+                .filter(a => a.dataset.fileName === pageThreadFigureAttachmentDetails.filename)[0];
+
+            if(correspondingAttachment) {
+                const pageThreadFigureImage = pageThreadFigure.querySelector('img');
+
+                if(pageThreadFigureImage) {
+                    pageThreadFigureImage.src = correspondingAttachment.dataset.cloudUrl;
+                }
+            }
+        });
+
+        pageThreadAttachmentsContainer.remove();
+    });
+
+
     // COMMENT FUNCTIONALITIES
 
     const textArea = document.querySelector('.comment-input-field textarea');
@@ -208,6 +250,8 @@
         }
 
         attachBefore.before(detailsThreadComment);
+
+        attachments = [];
     }
 
     document.querySelector('.comment-input-field textarea').addEventListener('focusin', (e) => {
@@ -215,15 +259,21 @@
     });
 
     document.querySelector('.comment-input-field .comment-submit-button').addEventListener('click', (e) => {
-        const commentContent = trixEditor.innerHTML;
+        const commentContent = trixEditor.innerHTML
+
+        const commentFormData = new FormData();
+        commentFormData.append('content', commentContent);
+
+        attachments.forEach(a => commentFormData.append('attachments', a));
+
+        // Clear
+        attachments = [];
         trixEditor.innerHTML = '';
         hideCommentActions();
+
         fetch('/Thread/Comment?threadId=' + threadId, {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ content: commentContent })
+            body: commentFormData
         })
             .then((res) => res.json())
             .then((json) => createCommentAfterRequest(json, 
@@ -235,6 +285,7 @@
     });
 
     document.querySelector('.comment-input-field .comment-cancel-button').addEventListener('click', (e) => {
+        attachments = [];
         trixEditor.innerHTML = '';
         hideCommentActions();
     });
@@ -256,6 +307,7 @@
 
         commentReplyCancelButton.addEventListener('click', (e) => {
             commentReplyInputFieldContainer.remove();
+            attachments = [];
         });
 
         const commentReplySubmitButton = document.createElement('button');
@@ -265,12 +317,15 @@
         commentReplySubmitButton.addEventListener('click', (e) => {
             const commentContent = e.target.parentElement.parentElement.querySelector('trix-editor').innerHTML;
             const parentCommentId = e.target.parentElement.parentElement.parentElement.querySelector('.comment-id').id;
+
+            const commentFormData = new FormData();
+            commentFormData.append('content', commentContent);
+
+            attachments.forEach(a => commentFormData.append('attachments', a));
+
             fetch(`/Thread/Comment?threadId=${threadId}&parentId=${parentCommentId}`, {
                 method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ content: commentContent })
+                body: commentFormData
             })
                 .then((res) => res.json())
                 .then((json) => {
@@ -279,6 +334,7 @@
                         e.target.parentElement.parentElement.parentElement.querySelector('.details-thread-comment-replies')
                     )
                     commentReplyInputFieldContainer.remove();
+                    attachments = [];
                 })
                 .catch((error) => console.error(error));
         });
@@ -361,4 +417,16 @@
             })
             .catch((error) => console.error(error));
     }));
+
+    document.addEventListener('trix-attachment-add', (e) => {
+        const attachment = e.attachment.file;
+
+        attachments.push(attachment);
+    });
+
+    document.addEventListener('trix-attachment-remove', (e) => {
+        const attachment = e.attachment.file;
+
+        attachments = attachments.filter(a => a.name !== attachment.name);
+    });
 </script>

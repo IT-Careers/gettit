@@ -5,7 +5,7 @@
     var communities = (List<GettitCommunityServiceModel>)this.ViewData["Communities"];
 }
 
-<form asp-controller="Thread" asp-action="CreateConfirm" method="post" id="create-thread-form" class="w-50">
+<form asp-controller="Thread" asp-action="CreateConfirm" method="post" id="create-thread-form" class="w-50" enctype="multipart/form-data">
     <hr class="hr-2 mb-5 hr-white" />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
     <div class="mb-3">
@@ -54,14 +54,21 @@
             }
         </div>
     </div>
+    <input class="content-attachments" type="file" multiple hidden asp-for="@Model.Attachments"/>
     <button class="btn btn-secondary create-thread-submit-button" type="button">Post</button>
 </form>
 
 <script>
     const currentTags = [];
+    let attachments = [];
 
     document.querySelector('#create-thread-form .create-thread-submit-button').addEventListener('click', (e) => {
         document.querySelector('#createThreadRealTextArea').value = document.querySelector('#createThreadTextEditor').innerHTML;
+
+        const fileContainer = new DataTransfer();
+        attachments.forEach(a => fileContainer.items.add(a));
+        document.querySelector('.content-attachments').files = fileContainer.files;
+
         document.querySelector('#create-thread-form').submit();
     });
 
@@ -143,5 +150,17 @@
                 community.parentElement.style.display = 'inline-flex';
             }
         });
+    });
+
+    document.addEventListener('trix-attachment-add', (e) => {
+        const attachment = e.attachment.file;
+
+        attachments.push(attachment);
+    });
+
+    document.addEventListener('trix-attachment-remove', (e) => {
+        const attachment = e.attachment.file;
+
+        attachments = attachments.filter(a => a.name !== attachment.name);
     });
 </script>

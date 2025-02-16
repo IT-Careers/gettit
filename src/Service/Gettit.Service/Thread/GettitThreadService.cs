@@ -146,6 +146,7 @@ namespace Gettit.Service.Thread
                 .Include(t => t.Reactions)
                     .ThenInclude(utr => utr.Reaction)
                         .ThenInclude(r => r.Emote)
+                .Include(t => t.Attachments)
                 .Include(t => t.Comments)
                 .Include(t => t.CreatedBy)
                 .Include(t => t.UpdatedBy)

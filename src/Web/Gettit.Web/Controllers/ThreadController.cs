@@ -1,9 +1,9 @@
-﻿using Gettit.Service.Community;
+﻿using Gettit.Service.Cloud;
+using Gettit.Service.Community;
 using Gettit.Service.Models;
 using Gettit.Service.Reaction;
 using Gettit.Service.Thread;
 using Gettit.Web.Models.Comment;
-using Gettit.Web.Models.Community;
 using Gettit.Web.Models.Thread;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +17,18 @@ namespace Gettit.Web.Controllers
 
         private readonly IReactionService _reactionService;
 
+        private readonly ICloudinaryService _cloudinaryService;
+
         public ThreadController(
-            IGettitCommunityService gettitCommunityService, 
-            IGettitThreadService gettitThreadService, 
-            IReactionService reactionService)
+            IGettitCommunityService gettitCommunityService,
+            IGettitThreadService gettitThreadService,
+            IReactionService reactionService,
+            ICloudinaryService cloudinaryService)
         {
             _gettitCommunityService = gettitCommunityService;
             _gettitThreadService = gettitThreadService;
             _reactionService = reactionService;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpGet]
@@ -38,6 +42,16 @@ namespace Gettit.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateConfirm(CreateThreadModel createThreadModel)
         {
+            List<AttachmentServiceModel> threadAttachments = new List<AttachmentServiceModel>();
+
+            foreach (var attachment in createThreadModel.Attachments)
+            {
+                threadAttachments.Add(new AttachmentServiceModel
+                {
+                    CloudUrl = await this.UploadFile(attachment)
+                });
+            }
+
             await this._gettitThreadService.CreateAsync(new GettitThreadServiceModel
             {
                 Title = createThreadModel.Title,
@@ -46,7 +60,8 @@ namespace Gettit.Web.Controllers
                 Community = new GettitCommunityServiceModel
                 {
                     Id = createThreadModel.CommunityId
-                }
+                },
+                Attachments = threadAttachments
             });
 
             // TODO: Redirect to Thread Page
@@ -69,16 +84,29 @@ namespace Gettit.Web.Controllers
         }
 
         [HttpPost]
-        [Consumes("application/json")]
         public async Task<IActionResult> Comment(
-            [FromBody] CreateCommentModel model,
+            [FromForm] CreateCommentModel model,
             [FromQuery] string threadId,
             [FromQuery] string? parentId = null)
         {
+
+            List<AttachmentServiceModel> commentAttachments = new List<AttachmentServiceModel>();
+
+            if (model.Attachments != null)
+            {
+                foreach (var attachment in model.Attachments)
+                {
+                    commentAttachments.Add(new AttachmentServiceModel
+                    {
+                        CloudUrl = await this.UploadFile(attachment)
+                    });
+                }
+            }
+
             var result = await this._gettitThreadService.CreateCommentOnThread(new CommentServiceModel
             {
                 Content = model.Content,
-                //Attachments
+                Attachments = commentAttachments
             }, threadId, parentId);
 
             return Ok(result);
@@ -93,6 +121,18 @@ namespace Gettit.Web.Controllers
             var result = await this._gettitThreadService.CreateReactionOnThread(threadId, reactionId);
 
             return Ok(result);
+        }
+
+        private async Task<string> UploadFile(IFormFile photo)
+        {
+            var uploadResponse = await this._cloudinaryService.UploadFile(photo);
+
+            if (uploadResponse == null)
+            {
+                return null;
+            }
+
+            return uploadResponse["url"].ToString();
         }
     }
 }
