@@ -642,4 +642,19 @@ trix-toolbar .trix-button {
     margin-left: 10px;
 }
 
+.user-reactions-container {
+    margin: 10px 0 20px 0;
+    width: fit-content;
+}
+
+.user-reaction {
+    padding: 10px;
+    border-radius: 50px;
+    border: 2px solid #FFFFFF;
+}
+
+.user-reaction:not(:first-child) {
+    margin-left: 10px;
+}
+
 /* END REACTIONS STYLING */

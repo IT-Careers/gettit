@@ -1,5 +1,6 @@
 ﻿using Gettit.Service.Community;
 using Gettit.Service.Models;
+using Gettit.Service.Reaction;
 using Gettit.Service.Thread;
 using Gettit.Web.Models.Comment;
 using Gettit.Web.Models.Community;
@@ -14,10 +15,16 @@ namespace Gettit.Web.Controllers
 
         private readonly IGettitThreadService _gettitThreadService;
 
-        public ThreadController(IGettitCommunityService gettitCommunityService, IGettitThreadService gettitThreadService)
+        private readonly IReactionService _reactionService;
+
+        public ThreadController(
+            IGettitCommunityService gettitCommunityService, 
+            IGettitThreadService gettitThreadService, 
+            IReactionService reactionService)
         {
             _gettitCommunityService = gettitCommunityService;
             _gettitThreadService = gettitThreadService;
+            _reactionService = reactionService;
         }
 
         [HttpGet]
@@ -50,6 +57,8 @@ namespace Gettit.Web.Controllers
         public async Task<IActionResult> Details(string threadId)
         {
             GettitThreadServiceModel thread = await this._gettitThreadService.GetByIdAsync(threadId);
+
+            this.ViewData["Reactions"] = this._reactionService.GetAll().ToList();
 
             if(thread == null)
             {

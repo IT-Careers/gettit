@@ -16,8 +16,10 @@ namespace Gettit.Web.ViewComponents
             this.commentService = commentService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string? threadId = null, string? parentId = null)
+        public async Task<IViewComponentResult> InvokeAsync(string? threadId = null, string? parentId = null, List<ReactionServiceModel> reactions = null)
         {
+            this.ViewData["Reactions"] = reactions ?? new List<ReactionServiceModel>();
+
             if (threadId != null)
             {
                 var threadComments = (await this.commentService.GetAllByThreadId(threadId)).ToList();

@@ -138,6 +138,8 @@ namespace Gettit.Service.Thread
                 .Include(t => t.Tags)
                 .Include(t => t.Community)
                 .Include(t => t.Reactions)
+                    .ThenInclude(utr => utr.Reaction)
+                        .ThenInclude(r => r.Emote)
                 .Include(t => t.Comments)
                 .Include(t => t.CreatedBy)
                 .Include(t => t.UpdatedBy)

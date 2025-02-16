@@ -2,8 +2,8 @@
 using Gettit.Data.Repositories;
 using Gettit.Service.Mappings;
 using Gettit.Service.Models;
+using Gettit.Service.User;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Gettit.Service.Comment
 {
@@ -13,12 +13,20 @@ namespace Gettit.Service.Comment
 
         private readonly GettitThreadRepository threadRepository;
 
+        private readonly ReactionRepository reactionRepository;
+
+        private readonly IUserContextService userContextService;
+
         public CommentService(
-            CommentRepository commentRepository, 
-            GettitThreadRepository threadRepository)
+            CommentRepository commentRepository,
+            GettitThreadRepository threadRepository,
+            ReactionRepository reactionRepository,
+            IUserContextService userContextService)
         {
             this.commentRepository = commentRepository;
             this.threadRepository = threadRepository;
+            this.reactionRepository = reactionRepository;
+            this.userContextService = userContextService;
         }
 
         public async Task<CommentServiceModel> CreateAsync(CommentServiceModel model)
@@ -62,6 +70,8 @@ namespace Gettit.Service.Comment
                 .Include(t => t.Comments)
                     .ThenInclude(c => c.Comment)
                         .ThenInclude(c => c.Reactions)
+                            .ThenInclude(ucr => ucr.Reaction)
+                                .ThenInclude(r => r.Emote)
                 .SingleOrDefaultAsync(t => t.Id == threadId);
 
             if(thread == null)
@@ -75,19 +85,34 @@ namespace Gettit.Service.Comment
                 .AsQueryable();
         }
 
-        public Task<Data.Models.Comment> InternalCreateAsync(Data.Models.Comment model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Data.Models.Comment> InternalGetByIdAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<CommentServiceModel> UpdateAsync(string id, CommentServiceModel model)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<UserCommentReactionServiceModel> CreateReactionOnComment(string commentId, string reactionId)
+        {
+            Data.Models.Comment reactionComment = await this.InternalGetByIdAsync(commentId);
+            Data.Models.Reaction reaction = await reactionRepository.GetAll()
+                    .SingleOrDefaultAsync(r => r.Id == reactionId);
+
+            var ucr = new UserCommentReaction
+            {
+                Reaction = reaction,
+                Comment = reactionComment,
+                User = (await this.userContextService.GetCurrentUserAsync())
+            };
+
+            reactionComment.Reactions.Add(ucr);
+
+            await this.commentRepository.UpdateAsync(reactionComment);
+
+            return ucr.ToModel(UserCommentReactionMappingsContext.User);
+        }
+
+        private async Task<Data.Models.Comment> InternalGetByIdAsync(string id)
+        {
+            return await this.InternalGetAll().SingleOrDefaultAsync(c => c.Id == id);
         }
 
         private IQueryable<Data.Models.Comment> InternalGetAll()

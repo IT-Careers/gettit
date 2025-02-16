@@ -29,7 +29,7 @@ namespace Gettit.Service.Mappings
                 Id = entity.Id,
                 Content = entity.Content,
                 Attachments = entity.Attachments?.Select(attachment => attachment.ToModel()).ToList(),
-                Reactions = ShouldMapReactions(context) ? entity.Reactions?.Select(reaction => reaction.ToModel()).ToList() : null,
+                Reactions = ShouldMapReactions(context) ? entity.Reactions?.Select(reaction => reaction.ToModel(UserCommentReactionMappingsContext.Comment)).ToList() : null,
                 Replies = ShouldMapReplies(context) ? entity.Replies?.Select(reply => reply.ToModel(CommentMappingsContext.Parent)).ToList() : null,
                 Parent = ShouldMapParent(context) ? entity.Parent?.ToModel(CommentMappingsContext.Reply) : null,
                 CreatedOn = entity.CreatedOn,
