@@ -49,22 +49,12 @@ namespace Gettit.Service.Community
 
         public IQueryable<GettitCommunityServiceModel> GetAll()
         {
-            return gettitCommunityRepository.GetAll()
-                .Include(c => c.Tags)
-                .Include(c => c.ThumbnailPhoto)
-                .Include(c => c.BannerPhoto)
-                .Include(c => c.CreatedBy)
-                .Include(c => c.UpdatedBy)
-                .Include(c => c.DeletedBy)
-                .Select(c => c.ToModel());
+            return this.InternalGetAll().Select(gc => gc.ToModel());
         }
 
         public async Task<GettitCommunityServiceModel> GetByIdAsync(string id)
         {
-            return (await gettitCommunityRepository.GetAll()
-                .Include(c => c.CreatedBy)
-                .Include(c => c.UpdatedBy)
-                .Include(c => c.DeletedBy)
+            return (await this.InternalGetAll()
                 .SingleOrDefaultAsync(c => c.Id == id))?.ToModel();
         }
 
@@ -85,6 +75,17 @@ namespace Gettit.Service.Community
             await gettitCommunityRepository.UpdateAsync(category);
 
             return category.ToModel();
+        }
+
+        private IQueryable<GettitCommunity> InternalGetAll()
+        {
+            return gettitCommunityRepository.GetAll()
+                .Include(c => c.Tags)
+                .Include(c => c.ThumbnailPhoto)
+                .Include(c => c.BannerPhoto)
+                .Include(c => c.CreatedBy)
+                .Include(c => c.UpdatedBy)
+                .Include(c => c.DeletedBy);
         }
     }
 }

@@ -4,7 +4,7 @@
     <span id="@Model.Id" class="thread-id" hidden></span>
     <header class="page-thread-heading d-flex justify-content-start">
         <div class="page-thread-heading-picture">
-            <img src="~/images/monkas.jpg" width="45px" height="45px">
+            <img src="@Model.Community.ThumbnailPhoto.CloudUrl" width="45px" height="45px">
         </div>
         <div class="page-thread-heading-category h5 ms-3 mt-1">g/@Model.Community.Name</div>
         <div class="page-thread-heading-timestamp ms-3 mt-1">@Model.CreatedOn.ToString("dd/MM/yyyy HH:mm")</div>
