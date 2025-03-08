@@ -15,6 +15,6 @@ namespace Gettit.Web.Models.Thread
         [BindProperty(BinderType = typeof(TagsModelBinder))]
         public List<string> Tags { get; set; }
 
-        public List<IFormFile> Attachments { get; set; }
+        public List<IFormFile> Attachments { get; set; } = new List<IFormFile>();
     }
 }

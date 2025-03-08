@@ -12,14 +12,15 @@ namespace Gettit.Service.Mappings
 
     public static class UserCommentReactionMappings
     {
-        public static UserCommentReactionServiceModel ToModel(this UserCommentReaction entity, UserCommentReactionMappingsContext context)
+        public static UserCommentReactionServiceModel ToModel(this UserCommentReaction entity, UserCommentReactionMappingsContext context, bool isDeleted = false)
         {
             return new UserCommentReactionServiceModel
             {
                 Id = entity.Id,
                 Comment = ShouldMapComments(context) ? entity.Comment?.ToModel(CommentMappingsContext.Reaction) : null,
                 Reaction = ShouldMapReaction(context) ? entity.Reaction?.ToModel() : null,
-                User = ShouldMapUser(context) ? entity.User?.ToModel() : null
+                User = ShouldMapUser(context) ? entity.User?.ToModel() : null,
+                IsDeleted = isDeleted
             };
         }
 

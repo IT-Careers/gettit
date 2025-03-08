@@ -63,8 +63,10 @@
     let attachments = [];
 
     document.querySelector('#create-thread-form .create-thread-submit-button').addEventListener('click', (e) => {
-        document.querySelector('#createThreadRealTextArea').value = document.querySelector('#createThreadTextEditor').innerHTML;
+        [...document.querySelector('#createThreadTextEditor').querySelectorAll('progress')].forEach(e => e.remove());
 
+        document.querySelector('#createThreadRealTextArea').value = document.querySelector('#createThreadTextEditor').innerHTML;
+        
         const fileContainer = new DataTransfer();
         attachments.forEach(a => fileContainer.items.add(a));
         document.querySelector('.content-attachments').files = fileContainer.files;
@@ -107,12 +109,14 @@
         document.querySelector('.community-selector').style.display = 'block';
         document.querySelector('.community-selector-autocomplete').style.display = 'flex';
         document.querySelector('.community-selector-autocomplete').style.width = document.querySelector('.form-tags-input').offsetWidth + 'px';
+        document.querySelector('.community-selector-autocomplete').style.top = (document.querySelector('.form-tags-input').getBoundingClientRect().y + 150).toFixed(0) + 'px';
         document.querySelector('.community-selector-input').focus();
     });
 
     document.querySelector('.community-selector-input').addEventListener('focusin', (e) => {
         document.querySelector('.community-selector-autocomplete').style.display = 'flex';
         document.querySelector('.community-selector-autocomplete').style.width = document.querySelector('.form-tags-input').offsetWidth + 'px';
+        document.querySelector('.community-selector-autocomplete').style.top = (document.querySelector('.form-tags-input').getBoundingClientRect().y + 150).toFixed(0) + 'px';
     });
 
     [...document.querySelectorAll('.selector-community')].forEach(sc => sc.addEventListener('mousedown', (e) => {

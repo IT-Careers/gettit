@@ -7,5 +7,7 @@
         public CommentServiceModel Comment { get; set; }
 
         public ReactionServiceModel Reaction { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

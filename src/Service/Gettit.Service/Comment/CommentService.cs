@@ -15,18 +15,22 @@ namespace Gettit.Service.Comment
 
         private readonly ReactionRepository reactionRepository;
 
+        private readonly UserCommentReactionRepository userCommentReactionRepository;
+
         private readonly IUserContextService userContextService;
 
         public CommentService(
             CommentRepository commentRepository,
             GettitThreadRepository threadRepository,
             ReactionRepository reactionRepository,
-            IUserContextService userContextService)
+            IUserContextService userContextService,
+            UserCommentReactionRepository userCommentReactionRepository)
         {
             this.commentRepository = commentRepository;
             this.threadRepository = threadRepository;
             this.reactionRepository = reactionRepository;
             this.userContextService = userContextService;
+            this.userCommentReactionRepository = userCommentReactionRepository;
         }
 
         public async Task<CommentServiceModel> CreateAsync(CommentServiceModel model)
@@ -93,6 +97,19 @@ namespace Gettit.Service.Comment
         public async Task<UserCommentReactionServiceModel> CreateReactionOnComment(string commentId, string reactionId)
         {
             Data.Models.Comment reactionComment = await this.InternalGetByIdAsync(commentId);
+            GettitUser user = await this.userContextService.GetCurrentUserAsync();
+
+            UserCommentReaction existentReaction = reactionComment.Reactions
+                .SingleOrDefault(utr => utr.Reaction.Id == reactionId && utr.User.Id == user.Id);
+
+            if (existentReaction != null)
+            {
+                await this.userCommentReactionRepository.DeleteAsync(existentReaction);
+
+                return existentReaction.ToModel(UserCommentReactionMappingsContext.User, true);
+            }
+
+
             Data.Models.Reaction reaction = await reactionRepository.GetAll()
                     .SingleOrDefaultAsync(r => r.Id == reactionId);
 
@@ -100,7 +117,7 @@ namespace Gettit.Service.Comment
             {
                 Reaction = reaction,
                 Comment = reactionComment,
-                User = (await this.userContextService.GetCurrentUserAsync())
+                User = user
             };
 
             reactionComment.Reactions.Add(ucr);
@@ -120,6 +137,10 @@ namespace Gettit.Service.Comment
             return commentRepository.GetAll()
                 .Include(c => c.Attachments)
                 .Include(t => t.Reactions)
+                    .ThenInclude(ucr => ucr.Reaction)
+                        .ThenInclude(r => r.Emote)
+                .Include(t => t.Reactions)
+                    .ThenInclude(ucr => ucr.User)
                 .Include(c => c.Replies)
                 .Include(t => t.CreatedBy)
                 .Include(t => t.UpdatedBy)
