@@ -7,5 +7,7 @@
         public GettitThreadServiceModel Thread { get; set; }
 
         public ReactionServiceModel Reaction { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

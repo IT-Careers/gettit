@@ -12,6 +12,10 @@ trix-toolbar .trix-button {
     background: #fff !important;
 }
 
+progress {
+    display: none;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -467,6 +471,7 @@ trix-toolbar .trix-button {
     background: #232323;
     display: none;
     position: fixed;
+    top: 0;
     padding-top: 20px;
 }
 

@@ -28,6 +28,8 @@ public class Program
         builder.Services.AddTransient<GettitThreadRepository>();
         builder.Services.AddTransient<CommentRepository>();
         builder.Services.AddTransient<ReactionRepository>();
+        builder.Services.AddTransient<UserThreadReactionRepository>();
+        builder.Services.AddTransient<UserCommentReactionRepository>();
 
         // Application Services
         builder.Services.AddTransient<IGettitCommunityService, GettitCommunityService>();

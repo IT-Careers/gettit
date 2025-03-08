@@ -153,7 +153,13 @@
             .then((json) => {
                 hideAllReactions();
                 const currentReactionsCountElement = targetElement.parentElement.previousElementSibling.querySelector('.page-thread-footer-reactions div');
-                currentReactionsCountElement.textContent = Number(currentReactionsCountElement.textContent) + 1;
+                currentReactionsCountElement.textContent = Number(currentReactionsCountElement.textContent) + (json.isDeleted ? (-1) : 1);
+                const currentThreadUserReactionsContainer = targetElement.parentElement.parentElement.querySelector('.user-reactions-container');
+                const currentUserReactionImageElement = [...currentThreadUserReactionsContainer.querySelectorAll('img')].filter(i => i.src === json.reaction.emote.cloudUrl)[0];
+
+                if(currentUserReactionImageElement) {
+                    currentUserReactionImageElement.nextElementSibling.textContent = Number(currentUserReactionImageElement.nextElementSibling.textContent) + (json.isDeleted ? (-1) : 1);
+                }
             })
             .catch((error) => console.error(error));
     }));
